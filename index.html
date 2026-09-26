@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-
 <title>РАЗБЛОКИРУЙ</title>
 
 <style>
@@ -25,290 +24,383 @@ body{
  color:white;
 }
 
-.screen{
+button{
+ font-family:Arial,sans-serif;
+ cursor:pointer;
+}
+
+#menu{
  position:fixed;
  inset:0;
  overflow:hidden;
-}
-
-.menu{
- position:absolute;
- inset:0;
  background:
-   linear-gradient(
-     to bottom,
-     rgba(0,0,0,.30),
-     rgba(0,0,0,.48)
-   ),
-   radial-gradient(
-     circle at 50% 35%,
-     #8b5c28 0%,
-     #342116 28%,
-     #080807 72%
-   );
+ radial-gradient(circle at 50% 42%,#8b5b27 0%,#3b2412 22%,#100a06 55%,#030303 100%);
 }
 
-/* декоративный коридор */
+/* ЛЮКС-КОРИДОР */
 
-.corridor{
+.hotel{
  position:absolute;
  inset:0;
- perspective:700px;
  overflow:hidden;
+ perspective:800px;
 }
 
-.back{
+.wall{
  position:absolute;
- width:54%;
- height:55%;
- left:23%;
- top:22%;
+ left:7%;
+ right:7%;
+ top:12%;
+ height:68%;
  background:
-   linear-gradient(
-     90deg,
-     #120c08,
-     #8b5a28,
-     #24150c
-   );
- box-shadow:
-   0 0 80px rgba(255,160,55,.25);
+ linear-gradient(
+  90deg,
+  #100b08,
+  #3b2617 18%,
+  #100a06 50%,
+  #3b2617 82%,
+  #100b08
+ );
+ border-left:5px solid #5c4125;
+ border-right:5px solid #5c4125;
+ box-shadow:inset 0 0 80px #000;
 }
 
-.door{
+.ceiling{
  position:absolute;
- width:39%;
- height:43%;
- left:30.5%;
- top:28%;
+ left:0;
+ right:0;
+ top:0;
+ height:28%;
  background:
-   linear-gradient(
-     90deg,
-     #241308,
-     #9a6330 45%,
-     #3a1e0c
-   );
- border:10px solid #201209;
- box-shadow:
-   0 20px 50px #000,
-   inset 0 0 30px rgba(0,0,0,.8);
-}
-
-.door:before{
- content:"";
- position:absolute;
- inset:9%;
- border:2px solid rgba(255,210,140,.45);
-}
-
-.door:after{
- content:"";
- position:absolute;
- width:10px;
- height:60px;
- right:9%;
- top:48%;
- border-radius:8px;
- background:#d9b16d;
- box-shadow:0 0 10px #d9b16d;
+ linear-gradient(#030303,#17100a);
 }
 
 .light{
  position:absolute;
- width:18px;
- height:160px;
- top:25%;
- background:#ffc978;
- filter:blur(8px);
- opacity:.75;
+ top:4%;
+ width:12px;
+ height:90px;
+ background:#ffd27b;
+ border-radius:50%;
+ box-shadow:
+ 0 0 12px #fff,
+ 0 0 35px #ffae3c,
+ 0 0 70px #ff8a00;
 }
 
-.light.left{
+.light.l1{left:12%}
+.light.l2{right:12%}
+
+.doorFrame{
+ position:absolute;
+ left:24%;
+ top:27%;
+ width:52%;
+ height:52%;
+ background:#080604;
+ border:14px solid #19100a;
+ box-shadow:
+ 0 0 0 3px #74502b,
+ 0 25px 70px #000;
+}
+
+.door{
+ position:absolute;
  left:8%;
+ top:5%;
+ width:84%;
+ height:90%;
+ background:
+ linear-gradient(
+  90deg,
+  #261307,
+  #75451f 45%,
+  #3c1f0c
+ );
+ border:5px solid #9b6b34;
+ box-shadow:
+ inset 0 0 35px #000,
+ 0 15px 35px #000;
 }
 
-.light.right{
- right:8%;
+.doorPanel{
+ position:absolute;
+ left:12%;
+ width:76%;
+ height:27%;
+ border:3px solid #9b6b34;
+}
+
+.dp1{top:9%}
+.dp2{top:38%}
+.dp3{top:67%}
+
+.handle{
+ position:absolute;
+ right:7%;
+ top:49%;
+ width:12px;
+ height:65px;
+ border-radius:10px;
+ background:#e3bd72;
+ box-shadow:
+ 0 0 10px #ffd978,
+ inset 2px 0 #fff;
+}
+
+.floor{
+ position:absolute;
+ left:-20%;
+ right:-20%;
+ bottom:-15%;
+ height:38%;
+ background:
+ repeating-linear-gradient(
+  90deg,
+  #17110c 0,
+  #17110c 75px,
+  #080604 77px
+ );
+ transform:perspective(400px) rotateX(55deg);
+ box-shadow:0 -20px 70px #000;
 }
 
 .plant{
  position:absolute;
- bottom:18%;
- width:80px;
- height:170px;
+ bottom:17%;
+ width:90px;
+ height:190px;
 }
 
-.plant.left{
- left:4%;
-}
-
-.plant.right{
- right:4%;
-}
+.plant.left{left:4%}
+.plant.right{right:4%}
 
 .pot{
  position:absolute;
  bottom:0;
- left:15px;
- width:50px;
- height:65px;
- background:linear-gradient(90deg,#111,#44301f,#111);
- border-radius:4px;
+ left:18px;
+ width:55px;
+ height:70px;
+ background:
+ linear-gradient(90deg,#090909,#40301d,#090909);
+ border:1px solid #76572d;
 }
 
 .leaf{
  position:absolute;
- width:25px;
- height:80px;
+ width:30px;
+ height:100px;
  border-radius:100% 0 100% 0;
- background:linear-gradient(#315f2a,#101f0d);
+ background:
+ linear-gradient(90deg,#0b1c08,#47762d);
  transform-origin:bottom;
 }
 
-.l1{left:15px;bottom:45px;transform:rotate(-30deg)}
-.l2{left:30px;bottom:50px;transform:rotate(10deg)}
-.l3{left:42px;bottom:43px;transform:rotate(35deg)}
-.l4{left:20px;bottom:80px;transform:rotate(-50deg)}
-.l5{left:40px;bottom:78px;transform:rotate(45deg)}
-
-.floor{
- position:absolute;
- left:-30%;
- width:160%;
- height:48%;
- bottom:-23%;
- background:
-   repeating-linear-gradient(
-     90deg,
-     #19120e 0,
-     #19120e 90px,
-     #0c0907 92px
-   );
- transform:rotateX(55deg);
- box-shadow:0 -20px 70px #000;
+.leaf:nth-child(1){
+ left:10px;
+ bottom:50px;
+ transform:rotate(-35deg);
 }
 
-/* контент */
-
-.content{
- position:absolute;
- inset:0;
- z-index:5;
- display:flex;
- flex-direction:column;
- align-items:center;
+.leaf:nth-child(2){
+ left:28px;
+ bottom:48px;
+ transform:rotate(-5deg);
 }
+
+.leaf:nth-child(3){
+ left:42px;
+ bottom:52px;
+ transform:rotate(30deg);
+}
+
+.leaf:nth-child(4){
+ left:20px;
+ bottom:90px;
+ transform:rotate(-50deg);
+}
+
+.leaf:nth-child(5){
+ left:43px;
+ bottom:90px;
+ transform:rotate(50deg);
+}
+
+/* ЗАГОЛОВОК */
 
 .title{
- margin-top:8vh;
+ position:absolute;
+ top:8%;
+ width:100%;
  text-align:center;
- font-weight:900;
  font-size:clamp(42px,11vw,78px);
+ font-weight:900;
  letter-spacing:2px;
- line-height:.9;
- color:#f5e4c2;
+ color:#f8e3bd;
  text-shadow:
-   0 3px 0 #79552f,
-   0 8px 25px #000;
+ 0 3px #70491f,
+ 0 7px 15px #000;
 }
 
 .subtitle{
- margin-top:16px;
+ position:absolute;
+ top:17%;
+ width:100%;
+ text-align:center;
  font-size:clamp(12px,3.5vw,20px);
- letter-spacing:2px;
  font-weight:bold;
- color:#e5c995;
- text-shadow:0 3px 8px #000;
+ letter-spacing:2px;
+ color:#e4bd7a;
 }
+
+/* ИГРАТЬ */
 
 .play{
  position:absolute;
- bottom:25%;
- width:68%;
- max-width:390px;
+ z-index:5;
+ left:12%;
+ right:12%;
+ bottom:24%;
  height:76px;
- border-radius:18px;
- border:2px solid #d89b36;
+ border-radius:42px;
+ border:2px solid #ffd36b;
+
  background:
-   linear-gradient(
-     #f2b64e,
-     #a95f0d
-   );
- color:white;
- font-size:27px;
+ linear-gradient(
+  #ffd66e,
+  #e9a72f 45%,
+  #a65b0a
+ );
+
+ color:#fff;
+ font-size:28px;
  font-weight:900;
  letter-spacing:2px;
- text-shadow:0 2px 4px #70400b;
+
+ text-shadow:0 3px 5px #754000;
+
  box-shadow:
-   0 10px 35px rgba(0,0,0,.7),
-   inset 0 2px 0 rgba(255,255,255,.35);
+ 0 12px 35px #000,
+ 0 0 25px #ffb52e,
+ inset 0 3px 0 #fff8,
+ inset 0 -7px 12px #743800;
 }
 
 .play:active{
- transform:scale(.97);
+ transform:scale(.96);
+ box-shadow:
+ 0 4px 15px #000,
+ inset 0 7px 15px #743800;
 }
 
-.buttons{
+/* НИЖНИЕ КНОПКИ */
+
+.bottom{
  position:absolute;
- bottom:5%;
- width:92%;
+ z-index:5;
+ left:4%;
+ right:4%;
+ bottom:3%;
  display:grid;
  grid-template-columns:repeat(4,1fr);
- gap:8px;
+ gap:9px;
 }
 
 .menuBtn{
- height:92px;
- border-radius:16px;
- border:1px solid rgba(255,255,255,.25);
+ height:88px;
+ border-radius:26px;
+
+ border:2px solid #c8953d;
+
  background:
-   linear-gradient(
-     rgba(45,48,51,.85),
-     rgba(10,11,13,.92)
-   );
- color:white;
- font-weight:bold;
- font-size:11px;
- box-shadow:0 8px 25px #000;
+ linear-gradient(
+  145deg,
+  #383b3d,
+  #111214 50%,
+  #050505
+ );
+
+ color:#fff;
+
+ font-size:10px;
+ font-weight:900;
+
+ box-shadow:
+ 0 10px 25px #000,
+ 0 0 12px #c38b2e,
+ inset 0 2px 0 #fff4,
+ inset 0 -8px 15px #000;
+
+ position:relative;
+ overflow:hidden;
+}
+
+.menuBtn:before{
+ content:"";
+ position:absolute;
+ left:10%;
+ right:10%;
+ top:3px;
+ height:3px;
+ border-radius:50%;
+ background:#fff6;
+}
+
+.menuBtn:after{
+ content:"";
+ position:absolute;
+ left:12%;
+ right:12%;
+ bottom:0;
+ height:5px;
+ border-radius:50%;
+ background:#ffc344;
+ box-shadow:0 0 15px #ffad18;
+}
+
+.menuBtn:active{
+ transform:translateY(5px) scale(.94);
+ box-shadow:
+ 0 3px 8px #000,
+ inset 0 7px 15px #000;
 }
 
 .icon{
  display:block;
- font-size:31px;
+ font-size:30px;
  margin-bottom:7px;
 }
 
-.menuBtn:active{
- transform:scale(.95);
-}
-
-/* игра */
+/* ИГРА */
 
 #game{
  display:none;
- position:absolute;
+ position:fixed;
  inset:0;
- background:#050505;
+ background:#120d08;
+ overflow:hidden;
 }
 
 #back{
  position:absolute;
- top:15px;
- left:15px;
  z-index:20;
- width:55px;
- height:45px;
- border-radius:12px;
- border:1px solid #777;
- background:#111a;
- color:white;
- font-size:24px;
+ top:18px;
+ left:15px;
+ width:52px;
+ height:48px;
+ border-radius:15px;
+ border:1px solid #aaa;
+ background:#111c;
+ color:#fff;
+ font-size:30px;
 }
 
-#levelText{
+#level{
  position:absolute;
  z-index:20;
- top:20px;
- right:18px;
+ top:25px;
+ right:15px;
  font-weight:bold;
 }
 
@@ -316,11 +408,11 @@ canvas{
  display:block;
 }
 
-/* popup */
+/* ОКНО */
 
 .popup{
  display:none;
- position:absolute;
+ position:fixed;
  inset:0;
  z-index:100;
  background:#000b;
@@ -330,147 +422,196 @@ canvas{
 }
 
 .box{
- width:100%;
- max-width:360px;
+ width:90%;
+ max-width:370px;
  padding:25px;
- border-radius:20px;
- background:linear-gradient(145deg,#292d32,#0d0f11);
- border:1px solid #666;
+ border-radius:22px;
+ background:
+ linear-gradient(145deg,#292d32,#090a0c);
+ border:1px solid #c4933c;
  text-align:center;
  box-shadow:0 20px 70px #000;
 }
 
 .box input{
  width:100%;
- padding:14px;
- margin:10px 0;
- border-radius:10px;
- border:1px solid #666;
- background:#050607;
- color:#62ff9a;
+ padding:15px;
+ margin:12px 0;
+ border-radius:12px;
+ border:1px solid #777;
+ background:#050505;
+ color:#65ff9c;
+ font-size:25px;
  text-align:center;
- font-size:24px;
  letter-spacing:8px;
 }
 
 .box button{
  width:100%;
- min-height:48px;
+ height:48px;
  margin-top:8px;
- border-radius:12px;
+ border-radius:13px;
  border:1px solid #777;
- background:#22272c;
- color:white;
+ background:#202429;
+ color:#fff;
  font-weight:bold;
 }
 
 @media(max-height:700px){
- .title{margin-top:5vh}
- .play{bottom:23%;height:65px}
- .buttons{bottom:3%}
- .menuBtn{height:75px}
+
+ .title{
+  top:5%;
+ }
+
+ .subtitle{
+  top:14%;
+ }
+
+ .play{
+  bottom:22%;
+  height:65px;
+ }
+
+ .menuBtn{
+  height:72px;
+  border-radius:21px;
+ }
+
+ .icon{
+  font-size:24px;
+ }
+
 }
 </style>
 </head>
 
 <body>
 
-<div class="screen" id="menu">
+<!-- ================= МЕНЮ ================= -->
 
- <div class="menu">
+<div id="menu">
 
-  <div class="corridor">
+ <div class="hotel">
 
-   <div class="back"></div>
+  <div class="ceiling"></div>
 
-   <div class="door"></div>
+  <div class="wall"></div>
 
-   <div class="light left"></div>
-   <div class="light right"></div>
+  <div class="light l1"></div>
+  <div class="light l2"></div>
 
-   <div class="plant left">
-    <div class="leaf l1"></div>
-    <div class="leaf l2"></div>
-    <div class="leaf l3"></div>
-    <div class="leaf l4"></div>
-    <div class="leaf l5"></div>
-    <div class="pot"></div>
+  <div class="doorFrame">
+   <div class="door">
+
+    <div class="doorPanel dp1"></div>
+    <div class="doorPanel dp2"></div>
+    <div class="doorPanel dp3"></div>
+
+    <div class="handle"></div>
+
    </div>
-
-   <div class="plant right">
-    <div class="leaf l1"></div>
-    <div class="leaf l2"></div>
-    <div class="leaf l3"></div>
-    <div class="leaf l4"></div>
-    <div class="leaf l5"></div>
-    <div class="pot"></div>
-   </div>
-
-   <div class="floor"></div>
-
   </div>
 
-  <div class="content">
-
-   <div class="title">
-    РАЗБЛОКИРУЙ
-   </div>
-
-   <div class="subtitle">
-    РЕШАЙ ЗАГАДКИ • ОТКРЫВАЙ ДВЕРИ
-   </div>
-
-   <button class="play" onclick="startGame()">
-    ИГРАТЬ
-   </button>
-
-   <div class="buttons">
-
-    <button class="menuBtn" onclick="settings()">
-     <span class="icon">⚙️</span>
-     НАСТРОЙКИ
-    </button>
-
-    <button class="menuBtn" onclick="levels()">
-     <span class="icon">▥</span>
-     УРОВНИ
-    </button>
-
-    <button class="menuBtn" onclick="shop()">
-     <span class="icon">🛒</span>
-     МАГАЗИН
-    </button>
-
-    <button class="menuBtn" onclick="achievements()">
-     <span class="icon">👑</span>
-     ДОСТИЖЕНИЯ
-    </button>
-
-   </div>
-
+  <div class="plant left">
+   <div class="leaf"></div>
+   <div class="leaf"></div>
+   <div class="leaf"></div>
+   <div class="leaf"></div>
+   <div class="leaf"></div>
+   <div class="pot"></div>
   </div>
+
+  <div class="plant right">
+   <div class="leaf"></div>
+   <div class="leaf"></div>
+   <div class="leaf"></div>
+   <div class="leaf"></div>
+   <div class="leaf"></div>
+   <div class="pot"></div>
+  </div>
+
+  <div class="floor"></div>
+
+ </div>
+
+ <div class="title">
+  РАЗБЛОКИРУЙ
+ </div>
+
+ <div class="subtitle">
+  РЕШАЙ ЗАГАДКИ • ОТКРЫВАЙ ДВЕРИ
+ </div>
+
+ <button class="play" onclick="startGame()">
+  ИГРАТЬ
+ </button>
+
+ <div class="bottom">
+
+  <button class="menuBtn"
+   onclick="popup('⚙️ НАСТРОЙКИ','Звук: ВКЛ<br>Музыка: ВКЛ<br>Язык: Русский')">
+   <span class="icon">⚙️</span>
+   НАСТРОЙКИ
+  </button>
+
+  <button class="menuBtn"
+   onclick="popup('▥ УРОВНИ','🔓 Уровень 1<br><br>🔒 Уровни 2–100')">
+   <span class="icon">▥</span>
+   УРОВНИ
+  </button>
+
+  <button class="menuBtn"
+   onclick="popup('🛒 МАГАЗИН','Подсказки, ключи и специальные предметы.')">
+   <span class="icon">🛒</span>
+   МАГАЗИН
+  </button>
+
+  <button class="menuBtn"
+   onclick="popup('👑 ДОСТИЖЕНИЯ','🏆 Первое открытие<br>🔐 Мастер кодов<br>🚪 Побег')">
+   <span class="icon">👑</span>
+   ДОСТИЖЕНИЯ
+  </button>
 
  </div>
 
 </div>
 
 
+<!-- ================= ИГРА ================= -->
+
 <div id="game">
 
  <button id="back" onclick="backMenu()">‹</button>
 
- <div id="levelText">
+ <div id="level">
   УРОВЕНЬ 1 / 100 ❤️❤️❤️
  </div>
 
 </div>
 
 
+<!-- ================= POPUP ================= -->
+
 <div class="popup" id="popup">
 
  <div class="box">
 
   <div id="popupText"></div>
+
+  <input
+   id="codeInput"
+   inputmode="numeric"
+   maxlength="4"
+   placeholder="••••"
+   style="display:none"
+  >
+
+  <button
+   id="openBtn"
+   style="display:none"
+   onclick="checkCode()">
+   ОТКРЫТЬ
+  </button>
 
   <button onclick="closePopup()">
    ЗАКРЫТЬ
@@ -488,32 +629,96 @@ canvas{
 let scene;
 let camera;
 let renderer;
-let door3D;
+let door;
+let unlocked=false;
+
+
+/* ================= МЕНЮ ================= */
+
+function popup(title,text){
+
+ document.getElementById("popupText").innerHTML=
+  "<h2>"+title+"</h2><p>"+text+"</p>";
+
+ document.getElementById("codeInput").style.display="none";
+ document.getElementById("openBtn").style.display="none";
+
+ document.getElementById("popup").style.display="flex";
+}
+
+
+function codePopup(){
+
+ document.getElementById("popupText").innerHTML=
+  "<h2>🔐 КОДОВЫЙ ЗАМОК</h2><p>Введи найденный код.</p>";
+
+ document.getElementById("codeInput").style.display="block";
+ document.getElementById("openBtn").style.display="block";
+
+ document.getElementById("popup").style.display="flex";
+
+ setTimeout(()=>{
+  document.getElementById("codeInput").focus();
+ },100);
+}
+
+
+function closePopup(){
+
+ document.getElementById("popup").style.display="none";
+
+}
+
+
+function checkCode(){
+
+ let value=
+ document.getElementById("codeInput").value;
+
+ if(value==="7294"){
+
+  unlocked=true;
+
+  document.getElementById("popupText").innerHTML=
+   "<h2>🎉 УРОВЕНЬ ПРОЙДЕН!</h2>"+
+   "<p>Код 7294 принят.</p>"+
+   "<p>⭐⭐⭐</p>";
+
+  document.getElementById("codeInput").style.display="none";
+  document.getElementById("openBtn").style.display="none";
+
+  openDoor();
+
+ }else{
+
+  document.getElementById("popupText").innerHTML=
+   "<h2>❌ Неверный код</h2>"+
+   "<p>Попробуй ещё раз.</p>";
+
+ }
+}
+
+
+/* ================= 3D ================= */
 
 function startGame(){
 
  document.getElementById("menu").style.display="none";
  document.getElementById("game").style.display="block";
 
- init3D();
+ if(!scene){
+  init3D();
+ }
+
 }
 
-
-/* =========================
-   3D LEVEL
-========================= */
 
 function init3D(){
 
  scene=new THREE.Scene();
 
- scene.background=new THREE.Color(0x17120d);
-
- scene.fog=new THREE.Fog(
-  0x17120d,
-  4,
-  16
- );
+ scene.background=
+  new THREE.Color(0x17100a);
 
 
  camera=new THREE.PerspectiveCamera(
@@ -526,13 +731,14 @@ function init3D(){
  camera.position.set(
   0,
   1.7,
-  5
+  6
  );
 
 
- renderer=new THREE.WebGLRenderer({
-  antialias:true
- });
+ renderer=
+  new THREE.WebGLRenderer({
+   antialias:true
+  });
 
  renderer.setSize(
   innerWidth,
@@ -550,12 +756,12 @@ function init3D(){
   .appendChild(renderer.domElement);
 
 
- /* LIGHT */
+ /* СВЕТ */
 
  const ambient=
   new THREE.AmbientLight(
    0xffd7a0,
-   1
+   1.4
   );
 
  scene.add(ambient);
@@ -563,15 +769,15 @@ function init3D(){
 
  const light=
   new THREE.PointLight(
-   0xffb75b,
-   8,
-   12
+   0xffa83b,
+   10,
+   14
   );
 
  light.position.set(
   0,
   4,
-  1
+  2
  );
 
  light.castShadow=true;
@@ -579,206 +785,338 @@ function init3D(){
  scene.add(light);
 
 
- /* FLOOR */
+ /* ПОЛ */
 
  const floor=
   new THREE.Mesh(
+
    new THREE.BoxGeometry(
     12,.15,12
    ),
+
    new THREE.MeshStandardMaterial({
-    color:0x29221b,
-    roughness:.35,
-    metalness:.1
+    color:0x332418,
+    roughness:.3,
+    metalness:.15
    })
+
   );
 
  floor.position.y=-.1;
+
  floor.receiveShadow=true;
 
  scene.add(floor);
 
 
- /* BACK WALL */
+ /* СТЕНА */
 
  const wall=
   new THREE.Mesh(
+
    new THREE.BoxGeometry(
-    12,5,.25
+    12,5,.3
    ),
+
    new THREE.MeshStandardMaterial({
-    color:0x4a3726,
+    color:0x4b3521,
     roughness:.8
    })
+
   );
 
  wall.position.set(
-   0,2.5,-2
-  );
+  0,
+  2.5,
+  -2
+ );
 
  scene.add(wall);
 
 
- /* DOOR FRAME */
+ /* ДВЕРНАЯ РАМА */
 
  const frame=
   new THREE.Mesh(
+
    new THREE.BoxGeometry(
-    3.8,4.4,.45
+    4,4.7,.5
    ),
+
    new THREE.MeshStandardMaterial({
-    color:0x17120e,
-    roughness:.5
+    color:0x0b0805,
+    roughness:.4
    })
+
   );
 
  frame.position.set(
-   0,2.2,-1.72
-  );
-
- frame.castShadow=true;
+  0,
+  2.35,
+  -1.72
+ );
 
  scene.add(frame);
 
 
- /* REAL DOOR */
+ /* ДВЕРЬ */
 
- door3D=
+ door=
   new THREE.Mesh(
+
    new THREE.BoxGeometry(
-    3.15,3.9,.18
+    3.25,4,.2
    ),
+
    new THREE.MeshStandardMaterial({
-    color:0x70421e,
-    roughness:.38,
-    metalness:.08
+    color:0x75451f,
+    roughness:.35,
+    metalness:.05
    })
+
   );
 
- door3D.position.set(
-   0,2,-1.48
-  );
+ door.position.set(
+  0,
+  2,
+  -1.42
+ );
 
- door3D.castShadow=true;
+ door.castShadow=true;
 
- scene.add(door3D);
+ scene.add(door);
 
 
- /* DOOR PANELS */
+ /* ПАНЕЛИ ДВЕРИ */
 
- for(let y of [.7,2,3.3]){
+ for(let y of [.75,2,3.25]){
 
-  const panel=
+  let p=
    new THREE.Mesh(
+
     new THREE.BoxGeometry(
-     2.5,.75,.04
+     2.5,.7,.05
     ),
+
     new THREE.MeshStandardMaterial({
-     color:0x4a2812,
-     roughness:.45
+     color:0x4b2811,
+     roughness:.4
     })
+
    );
 
-  panel.position.set(
-   0,y,-1.37
+  p.position.set(
+   0,
+   y,
+   -1.3
   );
 
-  scene.add(panel);
+  scene.add(p);
 
  }
 
 
- /* HANDLE */
+ /* РУЧКА */
 
  const handle=
   new THREE.Mesh(
+
    new THREE.CylinderGeometry(
-    .06,.06,.7,20
+    .065,.065,.7,20
    ),
+
    new THREE.MeshStandardMaterial({
-    color:0xd6a75e,
-    metalness:.8,
-    roughness:.2
+    color:0xd8ae62,
+    metalness:.9,
+    roughness:.15
    })
+
   );
 
- handle.rotation.z=Math.PI/2;
+ handle.rotation.z=
+  Math.PI/2;
 
  handle.position.set(
-   1.05,2,-1.35
-  );
+  1.05,
+  2,
+  -1.27
+ );
 
  scene.add(handle);
 
 
- /* PLANTS */
+ /* ЗАПИСКА */
 
- createPlant(-3.7,.3);
- createPlant(3.7,.3);
+ const note=
+  new THREE.Mesh(
+
+   new THREE.BoxGeometry(
+    1.1,.75,.03
+   ),
+
+   new THREE.MeshStandardMaterial({
+    color:0xe3ce98,
+    roughness:.8
+   })
+
+  );
+
+ note.position.set(
+  2.5,
+  2.5,
+  -1.25
+ );
+
+ scene.add(note);
 
 
- /* LOOP */
+ /* КОДОВАЯ ПАНЕЛЬ */
+
+ const panel=
+  new THREE.Mesh(
+
+   new THREE.BoxGeometry(
+    .9,1.25,.18
+   ),
+
+   new THREE.MeshStandardMaterial({
+    color:0x171717,
+    metalness:.5,
+    roughness:.25
+   })
+
+  );
+
+ panel.position.set(
+  -2.4,
+  1.8,
+  -1.3
+ );
+
+ scene.add(panel);
+
+
+ /* РАСТЕНИЯ */
+
+ createPlant(-3.7,.4);
+ createPlant(3.7,.4);
+
 
  animate();
+
 }
 
 
 function createPlant(x,z){
 
- const pot=
+ let pot=
   new THREE.Mesh(
+
    new THREE.CylinderGeometry(
     .35,.45,.7,20
    ),
+
    new THREE.MeshStandardMaterial({
-    color:0x181818,
-    roughness:.65
+    color:0x151515,
+    roughness:.6
    })
+
   );
 
  pot.position.set(
-   x,.35,z
-  );
+  x,.35,z
+ );
 
  scene.add(pot);
 
 
- for(let i=0;i<7;i++){
+ for(let i=0;i<8;i++){
 
-  const leaf=
+  let leaf=
    new THREE.Mesh(
+
     new THREE.SphereGeometry(
-     .18,.15,.45
+     .18,10,10
     ),
+
     new THREE.MeshStandardMaterial({
-     color:0x24451d,
+     color:0x24551c,
      roughness:.8
     })
+
    );
 
-  leaf.scale.y=2;
+  leaf.scale.set(
+   .7,
+   2,
+   .4
+  );
 
   leaf.position.set(
-   x+(Math.random()-.5)*.6,
-   1+i*.18,
-   z+(Math.random()-.5)*.4
+   x+(Math.random()-.5)*.7,
+   1+i*.16,
+   z+(Math.random()-.5)*.5
   );
 
   scene.add(leaf);
+
  }
+
 }
 
 
-function animate(){
+/* ================= ДВЕРЬ ================= */
 
- requestAnimationFrame(animate);
+function openDoor(){
 
- renderer.render(
-  scene,
-  camera
- );
+ if(!door)return;
+
+ let start=null;
+
+ function move(t){
+
+  if(!start)start=t;
+
+  let p=
+   Math.min(
+    (t-start)/1200,
+    1
+   );
+
+  door.rotation.y=
+   -Math.PI/2*p;
+
+  if(p<1){
+   requestAnimationFrame(move);
+  }
+
+ }
+
+ requestAnimationFrame(move);
+
 }
 
+
+/* ================= КОДОВАЯ ПАНЕЛЬ ================= */
+
+document.addEventListener(
+ "click",
+ function(e){
+
+  if(
+   e.target.tagName==="CANVAS" &&
+   !unlocked
+  ){
+
+   codePopup();
+
+  }
+
+ }
+);
+
+
+/* ================= НАЗАД ================= */
 
 function backMenu(){
 
@@ -788,61 +1126,28 @@ function backMenu(){
 }
 
 
-/* MENU */
+/* ================= LOOP ================= */
 
-function showMessage(title,text){
+function animate(){
 
- document.getElementById("popupText").innerHTML=
-  "<h2>"+title+"</h2><p>"+text+"</p>";
+ requestAnimationFrame(animate);
 
- document.getElementById("popup").style.display="flex";
-}
+ if(renderer&&scene&&camera){
 
-function closePopup(){
+  renderer.render(
+   scene,
+   camera
+  );
 
- document.getElementById("popup").style.display="none";
-
-}
-
-function settings(){
-
- showMessage(
-  "⚙️ НАСТРОЙКИ",
-  "Звук: ВКЛ<br>Музыка: ВКЛ<br>Язык: Русский"
- );
+ }
 
 }
 
-function levels(){
-
- showMessage(
-  "▥ УРОВНИ",
-  "🔓 Уровень 1<br><br>🔒 Уровни 2–100"
- );
-
-}
-
-function shop(){
-
- showMessage(
-  "🛒 МАГАЗИН",
-  "Скоро здесь появятся подсказки, ключи и специальные предметы."
- );
-
-}
-
-function achievements(){
-
- showMessage(
-  "👑 ДОСТИЖЕНИЯ",
-  "🏆 Первое открытие<br>🔐 Мастер кодов<br>🚪 Побег"
- );
-
-}
 
 window.addEventListener(
  "resize",
  ()=>{
+
   if(!camera)return;
 
   camera.aspect=
@@ -854,6 +1159,7 @@ window.addEventListener(
    innerWidth,
    innerHeight
   );
+
  }
 );
 
