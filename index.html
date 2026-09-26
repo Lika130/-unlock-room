@@ -10,7 +10,7 @@ content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <style>
 *{
  box-sizing:border-box;
- -webkit-tap-highlight-color:transparent
+ -webkit-tap-highlight-color:transparent;
 }
 
 html,body{
@@ -35,14 +35,11 @@ body{
  background:#080604;
 }
 
-/* РЕАЛИСТИЧНАЯ КОМНАТА */
+/* РЕАЛИСТИЧНЫЙ ФОН */
 .scene{
  position:absolute;
  inset:0;
- background:
- url("room.jpg")
- center center/
- cover no-repeat;
+ background:url("room.jpg") center/cover no-repeat;
 }
 
 /* ВЕРХ */
@@ -64,39 +61,35 @@ body{
  height:56px;
  border-radius:17px;
  border:2px solid #d2b574;
- background:rgba(10,7,4,.85);
- color:white;
+ background:#100b08dd;
+ color:#fff;
  font-size:32px;
- box-shadow:0 4px 15px #000;
 }
 
 .level{
  padding:12px 22px;
  border:2px solid #936a30;
  border-radius:22px;
- background:rgba(20,10,4,.88);
+ background:#140b06e8;
  color:#f4d48e;
  font-size:19px;
  font-weight:900;
- box-shadow:0 5px 20px #000;
 }
 
 .hearts{
  font-size:22px;
  letter-spacing:-4px;
- text-shadow:0 2px 5px #000;
 }
 
-/* НЕВИДИМЫЕ КНОПКИ НА ПРЕДМЕТАХ */
+/* НЕВИДИМЫЕ ЗОНЫ */
 .hot{
  position:absolute;
  z-index:10;
  border:0;
  background:transparent;
- cursor:pointer;
 }
 
-/* КАРТИНА */
+/* Картина */
 #picture{
  left:0;
  top:24%;
@@ -104,7 +97,7 @@ body{
  height:29%;
 }
 
-/* ЧАСЫ */
+/* Часы */
 #clock{
  right:0;
  top:20%;
@@ -112,7 +105,7 @@ body{
  height:20%;
 }
 
-/* ЗАПИСКА */
+/* Записка */
 #note{
  left:2%;
  bottom:24%;
@@ -120,7 +113,7 @@ body{
  height:19%;
 }
 
-/* ЛАМПА */
+/* Лампа */
 #lamp{
  left:0;
  bottom:27%;
@@ -128,7 +121,7 @@ body{
  height:21%;
 }
 
-/* КОДОВАЯ ПАНЕЛЬ */
+/* Кодовая панель */
 #keypad{
  right:10%;
  top:38%;
@@ -150,8 +143,8 @@ body{
  justify-content:space-between;
  background:
  linear-gradient(
- transparent,
- rgba(5,3,2,.97) 60%
+  transparent,
+  #060403 60%
  );
 }
 
@@ -159,7 +152,7 @@ body{
 .hint{
  height:55px;
  border:2px solid #805b27;
- background:rgba(16,9,4,.92);
+ background:#100904dd;
  border-radius:15px;
  color:#f5d58d;
  box-shadow:0 4px 15px #000;
@@ -175,12 +168,12 @@ body{
  font-weight:900;
 }
 
-/* ОКНА */
+/* ОКНО */
 .modalbg{
  position:absolute;
  z-index:100;
  inset:0;
- background:rgba(0,0,0,.8);
+ background:#000c;
  display:none;
  align-items:center;
  justify-content:center;
@@ -195,7 +188,7 @@ body{
  border-radius:20px;
  padding:20px;
  text-align:center;
- color:white;
+ color:#fff;
  box-shadow:0 20px 70px #000;
 }
 
@@ -214,11 +207,11 @@ body{
  border-radius:12px;
  border:1px solid #bb8b42;
  background:#1a0f08;
- color:white;
+ color:#fff;
  font-weight:900;
 }
 
-/* ДИСПЛЕЙ ЗАМКА */
+/* ДИСПЛЕЙ */
 .display{
  height:48px;
  background:#061007;
@@ -244,7 +237,7 @@ body{
  border-radius:9px;
  background:#25150b;
  border:1px solid #93672d;
- color:white;
+ color:#fff;
  font-size:18px;
 }
 
@@ -257,8 +250,8 @@ body{
  align-items:center;
  justify-content:center;
  text-align:center;
- background:rgba(0,0,0,.9);
- color:white;
+ background:#000e;
+ color:#fff;
 }
 
 .win h1{
@@ -282,14 +275,14 @@ body{
 
 <div id="game">
 
-<!-- РЕАЛИСТИЧНЫЙ ФОН -->
 <div class="scene"></div>
 
 <!-- ШАПКА -->
+
 <div class="header">
 
 <button class="back"
-onclick="location.href='index.html'">
+onclick="location.reload()">
 ‹
 </button>
 
@@ -304,7 +297,7 @@ onclick="location.href='index.html'">
 </div>
 
 
-<!-- ИНТЕРАКТИВНЫЕ ПРЕДМЕТЫ -->
+<!-- ПРЕДМЕТЫ -->
 
 <button
 id="picture"
@@ -345,11 +338,9 @@ onclick="openPad()">
 🎒
 </button>
 
-<button class="slot" id="i1"></button>
-
-<button class="slot" id="i2"></button>
-
-<button class="slot" id="i3"></button>
+<button class="slot"></button>
+<button class="slot"></button>
+<button class="slot"></button>
 
 <button class="hint"
 onclick="hint()">
@@ -429,7 +420,7 @@ id="win">
 </h1>
 
 <p>
-Дверь открыта.
+Код 7294 принят. Дверь открыта.
 </p>
 
 <div class="next">
@@ -517,7 +508,7 @@ function hint(){
 
  info(
   "Подсказка",
-  "Осмотри картину, часы, лампу и записку.<br><br>Цифры идут в порядке:<br><b>7 → 2 → 9 → 4</b>"
+  "Осмотри картину, часы, лампу и записку.<br><br>Цифры идут:<br><b>7 → 2 → 9 → 4</b>"
  );
 
 }
@@ -553,7 +544,7 @@ function update(){
 
 function press(number){
 
- if(code.length>=4)
+ if(code.length>=4 || lives<=0)
   return;
 
  code+=number;
@@ -602,7 +593,7 @@ function press(number){
 }
 
 
-/* КНОПКИ КОДОВОЙ ПАНЕЛИ */
+/* КЛАВИШИ */
 
 [
 1,2,3,
@@ -611,7 +602,7 @@ function press(number){
 "⌫",0
 ].forEach(number=>{
 
- let button=
+ const button=
  document.createElement("button");
 
  button.className="key";
