@@ -1,1 +1,52 @@
 
+<DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UNLOCK ROOM</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#090b0e;color:white;font-family:Arial,sans-serif;height:100vh;overflow:hidden}
+.game{height:100vh;background:radial-gradient(circle at 50% 25%,#51432d,#17191d 45%,#050607);position:relative}
+.top{padding:25px 15px;display:flex;justify-content:space-between;font-weight:bold}
+.room{position:absolute;left:5%;right:5%;top:13%;height:62%;background:linear-gradient(90deg,#151719,#36383a,#151719);border:2px solid #555;box-shadow:0 20px 60px #000}
+.door{position:absolute;top:18%;left:50%;transform:translateX(-50%);width:58%;height:70%;background:linear-gradient(90deg,#151719,#303234,#151719);border:8px solid #111;box-shadow:0 15px 35px #000}
+.door:after{content:"";position:absolute;inset:15px;border:1px solid #666}
+.handle{position:absolute;right:13%;top:52%;width:12px;height:55px;background:#bbb;border-radius:8px}
+.panel{position:absolute;left:6%;top:40%;background:#111;border:2px solid #555;border-radius:8px;padding:7px;width:72px;text-align:center}
+.screen{background:#031009;color:#55ff99;font:18px monospace;padding:7px}
+.lights{margin-top:7px;display:flex;justify-content:center;gap:5px}.lights i{width:9px;height:9px;border-radius:50%;background:red}.lights i:nth-child(2){background:#e8ad29}.lights i:nth-child(3){background:#28d66b}
+.note{position:absolute;right:6%;top:30%;background:#ddcc9f;color:#30281c;padding:12px;width:90px;transform:rotate(4deg);box-shadow:0 8px 15px #000;font-size:12px}
+.buttons{position:absolute;bottom:0;width:100%;padding:15px;display:flex;gap:7px;background:#050608eF}
+button{flex:1;padding:14px 5px;border-radius:12px;border:1px solid #555;background:#1b1e23;color:white;font-weight:bold}
+.pop{display:none;position:absolute;inset:0;background:#000b;align-items:center;justify-content:center;padding:20px}.box{background:#20242a;border:1px solid #666;border-radius:18px;padding:22px;width:90%;text-align:center}.box input{width:100%;padding:14px;background:#080a0c;color:white;border:1px solid #666;border-radius:10px;text-align:center;font-size:24px;letter-spacing:8px;margin:10px 0}
+</style>
+</head>
+<body>
+<div class="game">
+<div class="top"><span>UNLOCK ROOM</span><span>УРОВЕНЬ 1 / 100 ❤️❤️❤️</span></div>
+<div class="room">
+<div class="door" onclick="door()"><div class="handle"></div></div>
+<div class="panel" onclick="code()"><div class="screen" id="screen">----</div><div class="lights"><i></i><i></i><i></i></div></div>
+<div class="note" onclick="note()"><b>ЗАПИСКА</b><br>Цвета знают путь.</div>
+</div>
+<div class="buttons">
+<button onclick="inventory()">🎒 Инвентарь</button>
+<button onclick="hint()">💡 Подсказка</button>
+<button onclick="code()">🔐 Код</button>
+</div>
+<div class="pop" id="pop"><div class="box"><h2 id="title"></h2><p id="text"></p><input id="input" inputmode="numeric" maxlength="4" placeholder="••••"><button onclick="check()" id="ok">ОТКРЫТЬ</button><button onclick="closePop()">ЗАКРЫТЬ</button></div></div>
+</div>
+<script>
+let unlocked=false;
+function show(t,x,input=false){title.innerHTML=t;text.innerHTML=x;document.getElementById("input").style.display=input?"block":"none";document.getElementById("ok").style.display=input?"block":"none";pop.style.display="flex"}
+function closePop(){pop.style.display="none"}
+function code(){show("🔐 Кодовый замок","Введи найденный код.",true);setTimeout(()=>input.focus(),100)}
+function note(){show("📝 Записка","Красный = 7<br>Жёлтый = 2<br>Зелёный = 9<br><br>Последняя цифра спрятана на двери.")}
+function hint(){show("💡 Подсказка","Последняя цифра — <b>4</b>.<br><br>Полный код: <b>7294</b>")}
+function inventory(){show("🎒 Инвентарь",unlocked?"🔑 Ключ":"Пока пусто")}
+function door(){unlocked?show("🎉 Уровень пройден!","⭐⭐⭐<br><br>Дверь открыта!"):show("🚪 Дверь заперта","Сначала нужно найти код.")}
+function check(){if(input.value=="7294"){unlocked=true;screen.innerHTML="OPEN";show("🎉 УРОВЕНЬ ПРОЙДЕН!","🔑 Код 7294 принят.<br><br>Следующий уровень скоро будет доступен.")}else{screen.innerHTML="ERR";text.innerHTML="❌ Неверный код.<br>Попробуй ещё раз."}}
+</script>
+</body>
+</html>
