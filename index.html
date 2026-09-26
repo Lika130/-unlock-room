@@ -3,270 +3,356 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport"
-content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
-<title>РАЗБЛОКИРУЙ — Уровень 1</title>
+<title>UNLOCK ROOM</title>
 
 <style>
 *{
- box-sizing:border-box;
- -webkit-tap-highlight-color:transparent;
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
 }
 
 html,body{
- margin:0;
- width:100%;
- height:100%;
- overflow:hidden;
- background:#080604;
-}
-
-body{
- display:flex;
- justify-content:center;
- font-family:Arial,sans-serif;
+    margin:0;
+    padding:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#050403;
+    font-family:Arial,sans-serif;
 }
 
 #game{
- position:relative;
- width:min(100vw,520px);
- height:100vh;
- overflow:hidden;
- background:#080604;
+    position:relative;
+    width:100%;
+    max-width:520px;
+    height:100vh;
+    margin:auto;
+    overflow:hidden;
+    background:#050403;
 }
 
-/* РЕАЛИСТИЧНЫЙ ФОН */
-.scene{
- position:absolute;
- inset:0;
- background:url("room.jpg") center/cover no-repeat;
+/* КОМНАТА */
+#room{
+    position:absolute;
+    inset:0;
+    background-image:url("room.jpg");
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
 }
 
-/* ВЕРХ */
-.header{
- position:absolute;
- z-index:20;
- top:0;
- left:0;
- right:0;
- height:88px;
- padding:12px 14px;
- display:flex;
- align-items:center;
- justify-content:space-between;
+/* лёгкое затемнение снизу */
+#room:after{
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    height:25%;
+    background:linear-gradient(
+        transparent,
+        rgba(0,0,0,.85)
+    );
+    pointer-events:none;
 }
 
-.back{
- width:56px;
- height:56px;
- border-radius:17px;
- border:2px solid #d2b574;
- background:#100b08dd;
- color:#fff;
- font-size:32px;
+/* =========================
+   ВЕРХНИЙ HUD
+========================= */
+
+#top{
+    position:absolute;
+    z-index:20;
+    top:18px;
+    left:18px;
+    right:18px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
 }
 
-.level{
- padding:12px 22px;
- border:2px solid #936a30;
- border-radius:22px;
- background:#140b06e8;
- color:#f4d48e;
- font-size:19px;
- font-weight:900;
+#back{
+    width:62px;
+    height:62px;
+
+    border:2px solid #c9a45a;
+    border-radius:20px;
+
+    background:rgba(10,7,5,.88);
+    color:white;
+
+    font-size:38px;
+    line-height:1;
 }
 
-.hearts{
- font-size:22px;
- letter-spacing:-4px;
+#level{
+    padding:17px 25px;
+
+    border:2px solid #9c722e;
+    border-radius:28px;
+
+    background:rgba(12,8,5,.9);
+
+    color:#f2d68e;
+    font-size:21px;
+    font-weight:800;
+
+    box-shadow:0 5px 20px rgba(0,0,0,.5);
 }
 
-/* НЕВИДИМЫЕ ЗОНЫ */
-.hot{
- position:absolute;
- z-index:10;
- border:0;
- background:transparent;
+#lives{
+    font-size:27px;
+    letter-spacing:-5px;
+    white-space:nowrap;
 }
 
-/* Картина */
+/* =========================
+   НЕВИДИМЫЕ ЗОНЫ
+========================= */
+
+.hotspot{
+    position:absolute;
+    z-index:10;
+
+    border:0;
+    background:transparent;
+
+    cursor:pointer;
+}
+
+/* картина */
 #picture{
- left:0;
- top:24%;
- width:25%;
- height:29%;
+    left:0;
+    top:22%;
+    width:25%;
+    height:28%;
 }
 
-/* Часы */
+/* часы */
 #clock{
- right:0;
- top:20%;
- width:25%;
- height:20%;
+    right:0;
+    top:20%;
+    width:28%;
+    height:24%;
 }
 
-/* Записка */
-#note{
- left:2%;
- bottom:24%;
- width:28%;
- height:19%;
-}
-
-/* Лампа */
+/* лампа */
 #lamp{
- left:0;
- bottom:27%;
- width:25%;
- height:21%;
+    left:0;
+    bottom:31%;
+    width:23%;
+    height:23%;
 }
 
-/* Кодовая панель */
+/* записка */
+#note{
+    left:0;
+    bottom:25%;
+    width:29%;
+    height:15%;
+}
+
+/* клавиатура */
 #keypad{
- right:10%;
- top:38%;
- width:21%;
- height:29%;
+    right:12%;
+    top:39%;
+    width:20%;
+    height:27%;
 }
 
-/* НИЖНЯЯ ПАНЕЛЬ */
-.bottom{
- position:absolute;
- z-index:20;
- bottom:0;
- left:0;
- right:0;
- height:112px;
- padding:12px 18px;
- display:flex;
- align-items:flex-end;
- justify-content:space-between;
- background:
- linear-gradient(
-  transparent,
-  #060403 60%
- );
-}
+/* =========================
+   НИЖНЯЯ ПАНЕЛЬ
+========================= */
 
-.slot,
-.hint{
- height:55px;
- border:2px solid #805b27;
- background:#100904dd;
- border-radius:15px;
- color:#f5d58d;
- box-shadow:0 4px 15px #000;
+#bottom{
+    position:absolute;
+    z-index:20;
+
+    left:18px;
+    right:18px;
+    bottom:18px;
+
+    display:flex;
+    gap:8px;
 }
 
 .slot{
- width:55px;
- font-size:23px;
+    width:72px;
+    height:66px;
+
+    border:2px solid #9c722e;
+    border-radius:20px;
+
+    background:rgba(10,6,4,.9);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    color:white;
+    font-size:29px;
 }
 
-.hint{
- padding:0 17px;
- font-weight:900;
+#hint{
+    flex:1;
+
+    height:66px;
+
+    border:2px solid #9c722e;
+    border-radius:20px;
+
+    background:rgba(10,6,4,.92);
+
+    color:#f2d68e;
+
+    font-size:17px;
+    font-weight:800;
 }
 
-/* ОКНО */
-.modalbg{
- position:absolute;
- z-index:100;
- inset:0;
- background:#000c;
- display:none;
- align-items:center;
- justify-content:center;
- padding:20px;
+/* =========================
+   ОКНО
+========================= */
+
+.overlay{
+    display:none;
+
+    position:absolute;
+    z-index:50;
+
+    inset:0;
+
+    background:rgba(0,0,0,.78);
+
+    align-items:center;
+    justify-content:center;
+
+    padding:22px;
 }
 
-.modal{
- width:min(92%,390px);
- background:
- linear-gradient(#28170c,#0d0805);
- border:2px solid #b9873d;
- border-radius:20px;
- padding:20px;
- text-align:center;
- color:#fff;
- box-shadow:0 20px 70px #000;
+.card{
+    width:100%;
+    max-width:360px;
+
+    padding:25px;
+
+    border:2px solid #b7893b;
+    border-radius:25px;
+
+    background:#120b06;
+
+    color:#fff;
+
+    text-align:center;
+
+    box-shadow:0 20px 60px #000;
 }
 
-.modal h2{
- margin:0 0 10px;
- color:#f5d38a;
+.card h2{
+    margin:0 0 12px;
+
+    color:#f2d68e;
+
+    font-size:24px;
 }
 
-.modal p{
- line-height:1.5;
+.card p{
+    font-size:18px;
+    line-height:1.5;
 }
 
-.btn{
- margin-top:10px;
- padding:12px 22px;
- border-radius:12px;
- border:1px solid #bb8b42;
- background:#1a0f08;
- color:#fff;
- font-weight:900;
+.card button{
+    margin-top:10px;
+
+    padding:13px 25px;
+
+    border:1px solid #b7893b;
+    border-radius:14px;
+
+    background:#211309;
+
+    color:#f2d68e;
+
+    font-size:16px;
+    font-weight:bold;
 }
 
-/* ДИСПЛЕЙ */
-.display{
- height:48px;
- background:#061007;
- border:1px solid #78945f;
- border-radius:8px;
- color:#a8e88a;
- display:flex;
- align-items:center;
- justify-content:center;
- font:700 23px monospace;
- letter-spacing:7px;
- margin:12px 0;
+/* =========================
+   КЛАВИАТУРА
+========================= */
+
+#keypadWindow{
+    display:none;
+
+    position:absolute;
+    z-index:60;
+
+    inset:0;
+
+    background:rgba(0,0,0,.8);
+
+    align-items:center;
+    justify-content:center;
 }
 
-.pad{
- display:grid;
- grid-template-columns:repeat(3,1fr);
- gap:7px;
+.keypadBox{
+    width:290px;
+
+    padding:20px;
+
+    border:2px solid #b7893b;
+    border-radius:25px;
+
+    background:#110a06;
 }
 
-.key{
- padding:12px;
- border-radius:9px;
- background:#25150b;
- border:1px solid #93672d;
- color:#fff;
- font-size:18px;
+#display{
+    height:55px;
+
+    margin-bottom:12px;
+
+    border:1px solid #77531e;
+    border-radius:12px;
+
+    background:#050403;
+
+    color:#f4d98f;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:28px;
+    letter-spacing:8px;
 }
 
-/* ПОБЕДА */
-.win{
- position:absolute;
- z-index:120;
- inset:0;
- display:none;
- align-items:center;
- justify-content:center;
- text-align:center;
- background:#000e;
- color:#fff;
+.keys{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
 }
 
-.win h1{
- color:#f6d38a;
- font-size:34px;
+.keys button{
+    height:52px;
+
+    border:1px solid #76521d;
+    border-radius:12px;
+
+    background:#21140a;
+
+    color:white;
+
+    font-size:20px;
 }
 
-.next{
- display:inline-block;
- padding:14px 26px;
- border-radius:13px;
- background:
- linear-gradient(#f6cd67,#aa6d18);
- color:#160c04;
- font-weight:900;
+.keys .open{
+    grid-column:span 3;
+
+    background:#72501a;
+    color:#ffe5a0;
+    font-weight:bold;
 }
 </style>
 </head>
@@ -275,360 +361,304 @@ body{
 
 <div id="game">
 
-<div class="scene"></div>
+    <!-- ТОЛЬКО ФОН -->
+    <div id="room"></div>
 
-<!-- ШАПКА -->
+    <!-- HUD -->
+    <div id="top">
 
-<div class="header">
+        <button id="back" onclick="location.reload()">
+            ‹
+        </button>
 
-<button class="back"
-onclick="location.reload()">
-‹
-</button>
+        <div id="level">
+            УРОВЕНЬ 1 / 100
+        </div>
 
-<div class="level">
-УРОВЕНЬ 1 / 100
-</div>
+        <div id="lives">
+            ❤️❤️❤️
+        </div>
 
-<div class="hearts" id="hearts">
-❤️❤️❤️
-</div>
-
-</div>
-
-
-<!-- ПРЕДМЕТЫ -->
-
-<button
-id="picture"
-class="hot"
-onclick="inspect('picture')">
-</button>
-
-<button
-id="clock"
-class="hot"
-onclick="inspect('clock')">
-</button>
-
-<button
-id="note"
-class="hot"
-onclick="inspect('note')">
-</button>
-
-<button
-id="lamp"
-class="hot"
-onclick="inspect('lamp')">
-</button>
-
-<button
-id="keypad"
-class="hot"
-onclick="openPad()">
-</button>
+    </div>
 
 
-<!-- НИЗ -->
+    <!-- ИНТЕРАКТИВНЫЕ ПРЕДМЕТЫ -->
 
-<div class="bottom">
-
-<button class="slot">
-🎒
-</button>
-
-<button class="slot"></button>
-<button class="slot"></button>
-<button class="slot"></button>
-
-<button class="hint"
-onclick="hint()">
-💡 ПОДСКАЗКА
-</button>
-
-</div>
+    <button
+        class="hotspot"
+        id="picture"
+        onclick="showInfo(
+        'КАРТИНА',
+        'На картине спрятана первая цифра:<br><br><b>7</b>'
+        )">
+    </button>
 
 
-<!-- ИНФОРМАЦИЯ -->
-
-<div class="modalbg" id="info">
-
-<div class="modal">
-
-<h2 id="mh"></h2>
-
-<p id="mp"></p>
-
-<button
-class="btn"
-onclick="closeInfo()">
-ПОНЯТНО
-</button>
-
-</div>
-
-</div>
+    <button
+        class="hotspot"
+        id="clock"
+        onclick="showInfo(
+        'ЧАСЫ',
+        'Время на часах даёт вторую цифру:<br><br><b>2</b>'
+        )">
+    </button>
 
 
-<!-- ЗАМОК -->
-
-<div class="modalbg" id="padm">
-
-<div class="modal">
-
-<h2>
-Электронный замок
-</h2>
-
-<div
-class="display"
-id="display">
-----
-</div>
-
-<div
-class="pad"
-id="pad">
-</div>
-
-<button
-class="btn"
-onclick="closePad()">
-ЗАКРЫТЬ
-</button>
-
-</div>
-
-</div>
+    <button
+        class="hotspot"
+        id="lamp"
+        onclick="showInfo(
+        'ЛАМПА',
+        'Под лампой находится цифра:<br><br><b>9</b>'
+        )">
+    </button>
 
 
-<!-- ПОБЕДА -->
+    <button
+        class="hotspot"
+        id="note"
+        onclick="showInfo(
+        'ЗАПИСКА',
+        'На записке написано:<br><br>Начни с 7, затем 2, потом 9.<br>Последняя цифра — <b>4</b>.'
+        )">
+    </button>
 
-<div
-class="win"
-id="win">
 
-<div>
+    <button
+        class="hotspot"
+        id="keypad"
+        onclick="openKeypad()">
+    </button>
 
-<div style="font-size:70px">
-🔓
-</div>
 
-<h1>
-УРОВЕНЬ ПРОЙДЕН!
-</h1>
+    <!-- НИЖНЯЯ ПАНЕЛЬ -->
 
-<p>
-Код 7294 принят. Дверь открыта.
-</p>
+    <div id="bottom">
 
-<div class="next">
-УРОВЕНЬ 2 →
-</div>
+        <div class="slot">
+            🎒
+        </div>
 
-</div>
+        <div class="slot"></div>
 
-</div>
+        <div class="slot"></div>
+
+        <div class="slot"></div>
+
+        <button id="hint" onclick="showHint()">
+            💡 ПОДСКАЗКА
+        </button>
+
+    </div>
+
+
+    <!-- ИНФО -->
+
+    <div class="overlay" id="infoWindow">
+
+        <div class="card">
+
+            <h2 id="infoTitle"></h2>
+
+            <p id="infoText"></p>
+
+            <button onclick="closeInfo()">
+                ПОНЯТНО
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- КЛАВИАТУРА -->
+
+    <div id="keypadWindow">
+
+        <div class="keypadBox">
+
+            <div id="display">
+                ____
+            </div>
+
+            <div class="keys">
+
+                <button onclick="press('1')">1</button>
+                <button onclick="press('2')">2</button>
+                <button onclick="press('3')">3</button>
+
+                <button onclick="press('4')">4</button>
+                <button onclick="press('5')">5</button>
+                <button onclick="press('6')">6</button>
+
+                <button onclick="press('7')">7</button>
+                <button onclick="press('8')">8</button>
+                <button onclick="press('9')">9</button>
+
+                <button onclick="press('0')">0</button>
+                <button onclick="backspace()">⌫</button>
+                <button onclick="closeKeypad()">✕</button>
+
+                <button class="open" onclick="checkCode()">
+                    ОТКРЫТЬ ДВЕРЬ
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </div>
 
 
 <script>
 
-let lives=3;
-let code="";
-
-const correct="7294";
+let code = "";
+let lives = 3;
 
 
-function info(title,text){
+/* =========================
+   ИНФОРМАЦИЯ
+========================= */
 
- document.getElementById("mh")
- .textContent=title;
+function showInfo(title,text){
 
- document.getElementById("mp")
- .innerHTML=text;
+    document.getElementById("infoTitle").innerHTML = title;
 
- document.getElementById("info")
- .style.display="flex";
+    document.getElementById("infoText").innerHTML = text;
+
+    document.getElementById("infoWindow").style.display = "flex";
 }
 
 
 function closeInfo(){
 
- document.getElementById("info")
- .style.display="none";
-
+    document.getElementById("infoWindow").style.display = "none";
 }
 
 
-function inspect(type){
+/* =========================
+   ПОДСКАЗКА
+========================= */
 
- if(type==="picture"){
+function showHint(){
 
-  info(
-   "Картина",
-   "За рамой спрятана первая цифра: <b>7</b>."
-  );
-
- }
-
- if(type==="clock"){
-
-  info(
-   "Старинные часы",
-   "Часы остановились на <b>2</b>."
-  );
-
- }
-
- if(type==="lamp"){
-
-  info(
-   "Лампа",
-   "На основании выгравировано <b>9</b>."
-  );
-
- }
-
- if(type==="note"){
-
-  info(
-   "Старая записка",
-   "«Порядок важен». Последняя цифра находится на двери: <b>4</b>.<br><br>Код: <b>7294</b>"
-  );
-
- }
-
+    showInfo(
+        "💡 ПОДСКАЗКА",
+        "Осмотри предметы в комнате:<br><br>" +
+        "🖼 Картина → <b>7</b><br>" +
+        "🕐 Часы → <b>2</b><br>" +
+        "💡 Лампа → <b>9</b><br>" +
+        "📝 Записка → <b>4</b><br><br>" +
+        "Код двери: <b>7294</b>"
+    );
 }
 
 
-function hint(){
+/* =========================
+   КЛАВИАТУРА
+========================= */
 
- info(
-  "Подсказка",
-  "Осмотри картину, часы, лампу и записку.<br><br>Цифры идут:<br><b>7 → 2 → 9 → 4</b>"
- );
+function openKeypad(){
 
+    code = "";
+
+    updateDisplay();
+
+    document.getElementById("keypadWindow").style.display = "flex";
 }
 
 
-function openPad(){
+function closeKeypad(){
 
- code="";
-
- update();
-
- document.getElementById("padm")
- .style.display="flex";
-
-}
-
-
-function closePad(){
-
- document.getElementById("padm")
- .style.display="none";
-
-}
-
-
-function update(){
-
- document.getElementById("display")
- .textContent=code.padEnd(4,"-");
-
+    document.getElementById("keypadWindow").style.display = "none";
 }
 
 
 function press(number){
 
- if(code.length>=4 || lives<=0)
-  return;
+    if(code.length >= 4) return;
 
- code+=number;
+    code += number;
 
- update();
-
- if(code.length===4){
-
-  setTimeout(()=>{
-
-   if(code===correct){
-
-    closePad();
-
-    document.getElementById("win")
-    .style.display="flex";
-
-   }else{
-
-    code="";
-
-    update();
-
-    lives--;
-
-    document.getElementById("hearts")
-    .textContent=
-    "❤️".repeat(lives)+
-    "🖤".repeat(3-lives);
-
-    if(lives<=0){
-
-     info(
-      "Попытки закончились",
-      "Обнови страницу, чтобы начать уровень заново."
-     );
-
-    }
-
-   }
-
-  },250);
-
- }
-
+    updateDisplay();
 }
 
 
-/* КЛАВИШИ */
+function backspace(){
 
-[
-1,2,3,
-4,5,6,
-7,8,9,
-"⌫",0
-].forEach(number=>{
+    code = code.slice(0,-1);
 
- const button=
- document.createElement("button");
+    updateDisplay();
+}
 
- button.className="key";
 
- button.textContent=number;
+function updateDisplay(){
 
- button.onclick=()=>{
+    let result = code;
 
-  if(number==="⌫"){
+    while(result.length < 4){
+        result += "_";
+    }
 
-   code=code.slice(0,-1);
+    document.getElementById("display").textContent = result;
+}
 
-   update();
 
-  }else{
+/* =========================
+   ПРОВЕРКА
+========================= */
 
-   press(number);
+function checkCode(){
 
-  }
+    if(code === "7294"){
 
- };
+        closeKeypad();
 
- document.getElementById("pad")
- .appendChild(button);
+        showInfo(
+            "🔓 ДВЕРЬ ОТКРЫТА",
+            "Код <b>7294</b> правильный!<br><br>" +
+            "<b>УРОВЕНЬ ПРОЙДЕН!</b>"
+        );
 
-});
+        return;
+    }
+
+
+    lives--;
+
+    document.getElementById("lives").textContent =
+        "❤️".repeat(lives) +
+        "🖤".repeat(3-lives);
+
+    code = "";
+
+    updateDisplay();
+
+
+    if(lives <= 0){
+
+        closeKeypad();
+
+        showInfo(
+            "ИГРА ОКОНЧЕНА",
+            "Ты использовал все 3 попытки.<br><br>" +
+            "Перезапусти уровень и попробуй снова."
+        );
+
+    }else{
+
+        showInfo(
+            "❌ НЕВЕРНЫЙ КОД",
+            "Код неправильный.<br><br>" +
+            "Осталось жизней: <b>" +
+            lives +
+            "</b>"
+        );
+
+    }
+}
 
 </script>
 
