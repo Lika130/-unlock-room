@@ -1,52 +1,604 @@
-
-<DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>UNLOCK ROOM</title>
+
 <style>
-*{box-sizing:border-box}body{margin:0;background:#090b0e;color:white;font-family:Arial,sans-serif;height:100vh;overflow:hidden}
-.game{height:100vh;background:radial-gradient(circle at 50% 25%,#51432d,#17191d 45%,#050607);position:relative}
-.top{padding:25px 15px;display:flex;justify-content:space-between;font-weight:bold}
-.room{position:absolute;left:5%;right:5%;top:13%;height:62%;background:linear-gradient(90deg,#151719,#36383a,#151719);border:2px solid #555;box-shadow:0 20px 60px #000}
-.door{position:absolute;top:18%;left:50%;transform:translateX(-50%);width:58%;height:70%;background:linear-gradient(90deg,#151719,#303234,#151719);border:8px solid #111;box-shadow:0 15px 35px #000}
-.door:after{content:"";position:absolute;inset:15px;border:1px solid #666}
-.handle{position:absolute;right:13%;top:52%;width:12px;height:55px;background:#bbb;border-radius:8px}
-.panel{position:absolute;left:6%;top:40%;background:#111;border:2px solid #555;border-radius:8px;padding:7px;width:72px;text-align:center}
-.screen{background:#031009;color:#55ff99;font:18px monospace;padding:7px}
-.lights{margin-top:7px;display:flex;justify-content:center;gap:5px}.lights i{width:9px;height:9px;border-radius:50%;background:red}.lights i:nth-child(2){background:#e8ad29}.lights i:nth-child(3){background:#28d66b}
-.note{position:absolute;right:6%;top:30%;background:#ddcc9f;color:#30281c;padding:12px;width:90px;transform:rotate(4deg);box-shadow:0 8px 15px #000;font-size:12px}
-.buttons{position:absolute;bottom:0;width:100%;padding:15px;display:flex;gap:7px;background:#050608eF}
-button{flex:1;padding:14px 5px;border-radius:12px;border:1px solid #555;background:#1b1e23;color:white;font-weight:bold}
-.pop{display:none;position:absolute;inset:0;background:#000b;align-items:center;justify-content:center;padding:20px}.box{background:#20242a;border:1px solid #666;border-radius:18px;padding:22px;width:90%;text-align:center}.box input{width:100%;padding:14px;background:#080a0c;color:white;border:1px solid #666;border-radius:10px;text-align:center;font-size:24px;letter-spacing:8px;margin:10px 0}
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#050608;
+  color:#fff;
+  font-family:Arial,sans-serif;
+}
+
+body{
+  user-select:none;
+}
+
+.game{
+  position:relative;
+  width:100%;
+  height:100dvh;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 25%,rgba(110,92,58,.35),transparent 35%),
+    linear-gradient(#111316,#050608);
+}
+
+/* TOP BAR */
+
+.top{
+  position:absolute;
+  z-index:20;
+  top:0;
+  left:0;
+  right:0;
+  padding:18px 16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:14px;
+  font-weight:bold;
+  letter-spacing:.5px;
+  background:linear-gradient(#050608dd,transparent);
+}
+
+.logo{
+  font-size:19px;
+  letter-spacing:1px;
+}
+
+.hearts{
+  color:#ff3030;
+  font-size:19px;
+}
+
+/* ROOM */
+
+.room{
+  position:absolute;
+  left:0;
+  right:0;
+  top:0;
+  bottom:80px;
+  perspective:900px;
+  overflow:hidden;
+}
+
+/* FLOOR */
+
+.floor{
+  position:absolute;
+  left:-20%;
+  right:-20%;
+  bottom:-18%;
+  height:42%;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      #17191c 0,
+      #17191c 48px,
+      #101214 50px
+    );
+  transform:perspective(500px) rotateX(58deg);
+  transform-origin:center top;
+  box-shadow:0 -20px 50px #000 inset;
+}
+
+/* WALL */
+
+.wall{
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(
+      90deg,
+      #090b0d 0%,
+      #292c2f 23%,
+      #34373a 50%,
+      #292c2f 77%,
+      #090b0d 100%
+    );
+}
+
+/* LIGHT */
+
+.ceilingLight{
+  position:absolute;
+  top:11%;
+  left:50%;
+  width:180px;
+  height:15px;
+  transform:translateX(-50%);
+  background:#fff;
+  border-radius:50%;
+  filter:blur(7px);
+  opacity:.6;
+  box-shadow:
+    0 0 45px 18px rgba(255,230,180,.18),
+    0 120px 160px rgba(255,220,170,.08);
+}
+
+/* DOOR */
+
+.doorFrame{
+  position:absolute;
+  width:66%;
+  height:66%;
+  left:50%;
+  top:19%;
+  transform:translateX(-50%);
+  background:#08090a;
+  padding:12px;
+  box-shadow:
+    0 25px 70px #000,
+    0 0 0 1px #414348;
+}
+
+.door{
+  position:relative;
+  width:100%;
+  height:100%;
+  background:
+    linear-gradient(
+      90deg,
+      #111315,
+      #292c2f 45%,
+      #191b1e 70%,
+      #0d0f11
+    );
+  border:1px solid #55585c;
+  transition:transform 1s ease,opacity 1s ease;
+  transform-origin:left center;
+  box-shadow:inset 0 0 40px #000;
+}
+
+.door.open{
+  transform:perspective(900px) rotateY(-72deg);
+}
+
+/* door panels */
+
+.panelLine{
+  position:absolute;
+  left:10%;
+  right:10%;
+  top:8%;
+  bottom:8%;
+  border:1px solid #5a5d61;
+  box-shadow:inset 0 0 20px #000;
+}
+
+.panelLine:after{
+  content:"";
+  position:absolute;
+  left:7%;
+  right:7%;
+  top:7%;
+  bottom:7%;
+  border:1px solid #24272a;
+}
+
+/* HANDLE */
+
+.handle{
+  position:absolute;
+  right:9%;
+  top:48%;
+  width:10px;
+  height:60px;
+  border-radius:10px;
+  background:linear-gradient(#eee,#777);
+  box-shadow:0 3px 8px #000;
+}
+
+/* LOCK */
+
+.lock{
+  position:absolute;
+  left:6%;
+  top:39%;
+  width:78px;
+  height:105px;
+  border-radius:13px;
+  padding:8px;
+  background:linear-gradient(145deg,#383b3e,#101214);
+  border:2px solid #62666a;
+  box-shadow:
+    0 12px 30px #000,
+    inset 0 0 15px #000;
+  z-index:5;
+}
+
+.display{
+  height:48px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#020906;
+  color:#56ff9b;
+  font-family:monospace;
+  font-size:17px;
+  letter-spacing:3px;
+  border:1px solid #173b2a;
+  box-shadow:inset 0 0 15px #000;
+}
+
+.lights{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  margin-top:10px;
+}
+
+.light{
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  box-shadow:0 0 8px currentColor;
+}
+
+.red{background:#ff2222;color:#ff2222}
+.yellow{background:#ffc928;color:#ffc928}
+.green{background:#26e67a;color:#26e67a}
+
+/* NOTE */
+
+.note{
+  position:absolute;
+  right:6%;
+  top:29%;
+  width:105px;
+  min-height:92px;
+  padding:13px;
+  background:linear-gradient(135deg,#f1e1a9,#cdbb80);
+  color:#292316;
+  transform:rotate(5deg);
+  box-shadow:0 12px 25px #000;
+  z-index:6;
+  font-size:12px;
+  line-height:1.35;
+}
+
+.note b{
+  font-size:14px;
+}
+
+/* BOTTOM */
+
+.bottom{
+  position:absolute;
+  z-index:30;
+  left:0;
+  right:0;
+  bottom:0;
+  height:82px;
+  padding:10px;
+  display:flex;
+  gap:8px;
+  background:linear-gradient(transparent,#050608 20%);
+}
+
+button{
+  flex:1;
+  border:1px solid #45484d;
+  border-radius:13px;
+  background:linear-gradient(#24282d,#111316);
+  color:#fff;
+  font-weight:bold;
+  font-size:12px;
+  box-shadow:0 5px 15px #000;
+}
+
+button:active{
+  transform:scale(.96);
+}
+
+/* POPUP */
+
+.popup{
+  display:none;
+  position:absolute;
+  z-index:100;
+  inset:0;
+  align-items:center;
+  justify-content:center;
+  padding:25px;
+  background:rgba(0,0,0,.78);
+  backdrop-filter:blur(7px);
+}
+
+.box{
+  width:100%;
+  max-width:360px;
+  padding:25px;
+  border-radius:20px;
+  border:1px solid #555;
+  background:
+    linear-gradient(145deg,#25292e,#101215);
+  box-shadow:0 25px 80px #000;
+  text-align:center;
+}
+
+.box h2{
+  margin-top:0;
+}
+
+.box p{
+  color:#c9c9c9;
+  line-height:1.5;
+}
+
+input{
+  width:100%;
+  padding:15px;
+  border-radius:12px;
+  border:1px solid #555;
+  background:#050708;
+  color:#59ff9b;
+  text-align:center;
+  font-size:25px;
+  letter-spacing:8px;
+  outline:none;
+}
+
+.popup button{
+  width:100%;
+  min-height:48px;
+  margin-top:10px;
+}
+
+.success{
+  font-size:42px;
+  margin:10px;
+}
+
+/* MOBILE */
+
+@media(max-height:650px){
+  .doorFrame{
+    height:61%;
+    top:18%;
+  }
+
+  .lock{
+    top:38%;
+    transform:scale(.9);
+    transform-origin:left center;
+  }
+
+  .note{
+    top:28%;
+    transform:scale(.9);
+    transform-origin:right top;
+  }
+}
 </style>
 </head>
+
 <body>
+
 <div class="game">
-<div class="top"><span>UNLOCK ROOM</span><span>УРОВЕНЬ 1 / 100 ❤️❤️❤️</span></div>
-<div class="room">
-<div class="door" onclick="door()"><div class="handle"></div></div>
-<div class="panel" onclick="code()"><div class="screen" id="screen">----</div><div class="lights"><i></i><i></i><i></i></div></div>
-<div class="note" onclick="note()"><b>ЗАПИСКА</b><br>Цвета знают путь.</div>
+
+  <div class="top">
+    <div class="logo">UNLOCK ROOM</div>
+    <div>УРОВЕНЬ 1 / 100 <span class="hearts">♥♥♥</span></div>
+  </div>
+
+  <div class="room">
+
+    <div class="wall"></div>
+
+    <div class="ceilingLight"></div>
+
+    <div class="doorFrame">
+      <div class="door" id="door">
+        <div class="panelLine"></div>
+        <div class="handle"></div>
+      </div>
+    </div>
+
+    <div class="lock" onclick="openCode()">
+      <div class="display" id="display">----</div>
+      <div class="lights">
+        <div class="light red"></div>
+        <div class="light yellow"></div>
+        <div class="light green"></div>
+      </div>
+    </div>
+
+    <div class="note" onclick="openNote()">
+      <b>ЗАПИСКА</b><br><br>
+      Цвета<br>
+      знают путь.
+    </div>
+
+    <div class="floor"></div>
+
+  </div>
+
+  <div class="bottom">
+    <button onclick="inventory()">🎒<br>ИНВЕНТАРЬ</button>
+    <button onclick="hint()">💡<br>ПОДСКАЗКА</button>
+    <button onclick="openCode()">🔐<br>КОД</button>
+  </div>
+
+  <div class="popup" id="popup">
+
+    <div class="box">
+
+      <div id="content"></div>
+
+      <input
+        id="codeInput"
+        inputmode="numeric"
+        maxlength="4"
+        placeholder="••••"
+      >
+
+      <button id="openButton" onclick="checkCode()">
+        ОТКРЫТЬ
+      </button>
+
+      <button onclick="closePopup()">
+        ЗАКРЫТЬ
+      </button>
+
+    </div>
+
+  </div>
+
 </div>
-<div class="buttons">
-<button onclick="inventory()">🎒 Инвентарь</button>
-<button onclick="hint()">💡 Подсказка</button>
-<button onclick="code()">🔐 Код</button>
-</div>
-<div class="pop" id="pop"><div class="box"><h2 id="title"></h2><p id="text"></p><input id="input" inputmode="numeric" maxlength="4" placeholder="••••"><button onclick="check()" id="ok">ОТКРЫТЬ</button><button onclick="closePop()">ЗАКРЫТЬ</button></div></div>
-</div>
+
 <script>
-let unlocked=false;
-function show(t,x,input=false){title.innerHTML=t;text.innerHTML=x;document.getElementById("input").style.display=input?"block":"none";document.getElementById("ok").style.display=input?"block":"none";pop.style.display="flex"}
-function closePop(){pop.style.display="none"}
-function code(){show("🔐 Кодовый замок","Введи найденный код.",true);setTimeout(()=>input.focus(),100)}
-function note(){show("📝 Записка","Красный = 7<br>Жёлтый = 2<br>Зелёный = 9<br><br>Последняя цифра спрятана на двери.")}
-function hint(){show("💡 Подсказка","Последняя цифра — <b>4</b>.<br><br>Полный код: <b>7294</b>")}
-function inventory(){show("🎒 Инвентарь",unlocked?"🔑 Ключ":"Пока пусто")}
-function door(){unlocked?show("🎉 Уровень пройден!","⭐⭐⭐<br><br>Дверь открыта!"):show("🚪 Дверь заперта","Сначала нужно найти код.")}
-function check(){if(input.value=="7294"){unlocked=true;screen.innerHTML="OPEN";show("🎉 УРОВЕНЬ ПРОЙДЕН!","🔑 Код 7294 принят.<br><br>Следующий уровень скоро будет доступен.")}else{screen.innerHTML="ERR";text.innerHTML="❌ Неверный код.<br>Попробуй ещё раз."}}
+
+let unlocked = false;
+
+function popup(html, input=false){
+
+  document.getElementById("content").innerHTML = html;
+
+  const inp = document.getElementById("codeInput");
+  const btn = document.getElementById("openButton");
+
+  inp.style.display = input ? "block" : "none";
+  btn.style.display = input ? "block" : "none";
+
+  document.getElementById("popup").style.display = "flex";
+
+  if(input){
+    setTimeout(()=>{
+      inp.focus();
+    },200);
+  }
+}
+
+function closePopup(){
+  document.getElementById("popup").style.display = "none";
+}
+
+function openCode(){
+
+  if(unlocked){
+    popup(`
+      <div class="success">🔓</div>
+      <h2>ДВЕРЬ ОТКРЫТА</h2>
+      <p>Ты уже прошёл этот уровень.</p>
+    `);
+    return;
+  }
+
+  popup(`
+    <h2>🔐 КОДОВАЯ ПАНЕЛЬ</h2>
+    <p>Введи четырёхзначный код.</p>
+  `,true);
+}
+
+function openNote(){
+
+  popup(`
+    <h2>📝 ЗАПИСКА</h2>
+    <p>
+      <b>Красный = 7</b><br>
+      <b>Жёлтый = 2</b><br>
+      <b>Зелёный = 9</b>
+      <br><br>
+      Последняя цифра спрятана на двери.
+    </p>
+  `);
+}
+
+function hint(){
+
+  popup(`
+    <h2>💡 ПОДСКАЗКА</h2>
+    <p>
+      Цвета на панели дают первые три цифры.
+      <br><br>
+      Последняя цифра — <b>4</b>.
+    </p>
+  `);
+}
+
+function inventory(){
+
+  popup(`
+    <h2>🎒 ИНВЕНТАРЬ</h2>
+    <p>
+      ${unlocked ? "🔑 Ключ от двери" : "Инвентарь пока пуст."}
+    </p>
+  `);
+}
+
+function checkCode(){
+
+  const input = document.getElementById("codeInput");
+  const display = document.getElementById("display");
+
+  if(input.value === "7294"){
+
+    unlocked = true;
+
+    display.innerHTML = "OPEN";
+
+    document.getElementById("door").classList.add("open");
+
+    popup(`
+      <div class="success">🎉</div>
+      <h2>УРОВЕНЬ ПРОЙДЕН!</h2>
+      <p>
+        Код <b>7294</b> принят.
+        <br><br>
+        🔑 Дверь открыта.
+        <br><br>
+        ⭐⭐⭐
+      </p>
+      <button onclick="nextLevel()">
+        ➡️ СЛЕДУЮЩИЙ УРОВЕНЬ
+      </button>
+    `);
+
+  }else{
+
+    display.innerHTML = "ERR";
+
+    popup(`
+      <h2>❌ НЕВЕРНЫЙ КОД</h2>
+      <p>
+        Код не подходит.
+        <br><br>
+        Изучи комнату внимательнее.
+      </p>
+    `,true);
+
+  }
+}
+
+function nextLevel(){
+
+  popup(`
+    <div class="success">🚧</div>
+    <h2>УРОВЕНЬ 2</h2>
+    <p>
+      Следующая комната уже готовится.
+      <br><br>
+      Здесь будет новая загадка.
+    </p>
+  `);
+
+}
+
 </script>
+
 </body>
 </html>
