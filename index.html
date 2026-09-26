@@ -2,247 +2,481 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>UNLOCK ROOM — 3D</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+
+<title>РАЗБЛОКИРУЙ</title>
 
 <style>
+*{
+ box-sizing:border-box;
+ -webkit-tap-highlight-color:transparent;
+}
+
 html,body{
-    margin:0;
-    width:100%;
-    height:100%;
-    overflow:hidden;
-    background:#000;
-    font-family:Arial,sans-serif;
-    touch-action:none;
+ margin:0;
+ width:100%;
+ height:100%;
+ overflow:hidden;
+ background:#050505;
+ font-family:Arial,sans-serif;
 }
 
-#game{
-    position:fixed;
-    inset:0;
+body{
+ color:white;
 }
 
-canvas{
-    display:block;
+.screen{
+ position:fixed;
+ inset:0;
+ overflow:hidden;
 }
 
-.ui{
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    color:white;
+.menu{
+ position:absolute;
+ inset:0;
+ background:
+   linear-gradient(
+     to bottom,
+     rgba(0,0,0,.30),
+     rgba(0,0,0,.48)
+   ),
+   radial-gradient(
+     circle at 50% 35%,
+     #8b5c28 0%,
+     #342116 28%,
+     #080807 72%
+   );
 }
 
-.top{
-    position:absolute;
-    top:0;
-    left:0;
-    right:0;
-    padding:18px 16px;
-    display:flex;
-    justify-content:space-between;
-    font-weight:bold;
-    text-shadow:0 2px 8px #000;
-    font-size:14px;
+/* декоративный коридор */
+
+.corridor{
+ position:absolute;
+ inset:0;
+ perspective:700px;
+ overflow:hidden;
+}
+
+.back{
+ position:absolute;
+ width:54%;
+ height:55%;
+ left:23%;
+ top:22%;
+ background:
+   linear-gradient(
+     90deg,
+     #120c08,
+     #8b5a28,
+     #24150c
+   );
+ box-shadow:
+   0 0 80px rgba(255,160,55,.25);
+}
+
+.door{
+ position:absolute;
+ width:39%;
+ height:43%;
+ left:30.5%;
+ top:28%;
+ background:
+   linear-gradient(
+     90deg,
+     #241308,
+     #9a6330 45%,
+     #3a1e0c
+   );
+ border:10px solid #201209;
+ box-shadow:
+   0 20px 50px #000,
+   inset 0 0 30px rgba(0,0,0,.8);
+}
+
+.door:before{
+ content:"";
+ position:absolute;
+ inset:9%;
+ border:2px solid rgba(255,210,140,.45);
+}
+
+.door:after{
+ content:"";
+ position:absolute;
+ width:10px;
+ height:60px;
+ right:9%;
+ top:48%;
+ border-radius:8px;
+ background:#d9b16d;
+ box-shadow:0 0 10px #d9b16d;
+}
+
+.light{
+ position:absolute;
+ width:18px;
+ height:160px;
+ top:25%;
+ background:#ffc978;
+ filter:blur(8px);
+ opacity:.75;
+}
+
+.light.left{
+ left:8%;
+}
+
+.light.right{
+ right:8%;
+}
+
+.plant{
+ position:absolute;
+ bottom:18%;
+ width:80px;
+ height:170px;
+}
+
+.plant.left{
+ left:4%;
+}
+
+.plant.right{
+ right:4%;
+}
+
+.pot{
+ position:absolute;
+ bottom:0;
+ left:15px;
+ width:50px;
+ height:65px;
+ background:linear-gradient(90deg,#111,#44301f,#111);
+ border-radius:4px;
+}
+
+.leaf{
+ position:absolute;
+ width:25px;
+ height:80px;
+ border-radius:100% 0 100% 0;
+ background:linear-gradient(#315f2a,#101f0d);
+ transform-origin:bottom;
+}
+
+.l1{left:15px;bottom:45px;transform:rotate(-30deg)}
+.l2{left:30px;bottom:50px;transform:rotate(10deg)}
+.l3{left:42px;bottom:43px;transform:rotate(35deg)}
+.l4{left:20px;bottom:80px;transform:rotate(-50deg)}
+.l5{left:40px;bottom:78px;transform:rotate(45deg)}
+
+.floor{
+ position:absolute;
+ left:-30%;
+ width:160%;
+ height:48%;
+ bottom:-23%;
+ background:
+   repeating-linear-gradient(
+     90deg,
+     #19120e 0,
+     #19120e 90px,
+     #0c0907 92px
+   );
+ transform:rotateX(55deg);
+ box-shadow:0 -20px 70px #000;
+}
+
+/* контент */
+
+.content{
+ position:absolute;
+ inset:0;
+ z-index:5;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
 }
 
 .title{
-    font-size:20px;
-    letter-spacing:1px;
+ margin-top:8vh;
+ text-align:center;
+ font-weight:900;
+ font-size:clamp(42px,11vw,78px);
+ letter-spacing:2px;
+ line-height:.9;
+ color:#f5e4c2;
+ text-shadow:
+   0 3px 0 #79552f,
+   0 8px 25px #000;
 }
 
-.hearts{
-    color:#ff3030;
-    font-size:18px;
+.subtitle{
+ margin-top:16px;
+ font-size:clamp(12px,3.5vw,20px);
+ letter-spacing:2px;
+ font-weight:bold;
+ color:#e5c995;
+ text-shadow:0 3px 8px #000;
 }
 
-.bottom{
-    position:absolute;
-    left:0;
-    right:0;
-    bottom:0;
-    display:flex;
-    gap:8px;
-    padding:12px;
-    background:linear-gradient(transparent,rgba(0,0,0,.9));
-    pointer-events:auto;
+.play{
+ position:absolute;
+ bottom:25%;
+ width:68%;
+ max-width:390px;
+ height:76px;
+ border-radius:18px;
+ border:2px solid #d89b36;
+ background:
+   linear-gradient(
+     #f2b64e,
+     #a95f0d
+   );
+ color:white;
+ font-size:27px;
+ font-weight:900;
+ letter-spacing:2px;
+ text-shadow:0 2px 4px #70400b;
+ box-shadow:
+   0 10px 35px rgba(0,0,0,.7),
+   inset 0 2px 0 rgba(255,255,255,.35);
 }
 
-button{
-    flex:1;
-    min-height:58px;
-    border-radius:14px;
-    border:1px solid #666;
-    background:linear-gradient(#292d33,#111318);
-    color:white;
-    font-size:12px;
-    font-weight:bold;
-    box-shadow:0 6px 20px #000;
+.play:active{
+ transform:scale(.97);
 }
 
-button:active{
-    transform:scale(.96);
+.buttons{
+ position:absolute;
+ bottom:5%;
+ width:92%;
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:8px;
 }
 
-.crosshair{
-    position:absolute;
-    left:50%;
-    top:50%;
-    width:18px;
-    height:18px;
-    transform:translate(-50%,-50%);
-    opacity:.55;
+.menuBtn{
+ height:92px;
+ border-radius:16px;
+ border:1px solid rgba(255,255,255,.25);
+ background:
+   linear-gradient(
+     rgba(45,48,51,.85),
+     rgba(10,11,13,.92)
+   );
+ color:white;
+ font-weight:bold;
+ font-size:11px;
+ box-shadow:0 8px 25px #000;
 }
 
-.crosshair:before,
-.crosshair:after{
-    content:"";
-    position:absolute;
-    background:white;
+.icon{
+ display:block;
+ font-size:31px;
+ margin-bottom:7px;
 }
 
-.crosshair:before{
-    width:18px;
-    height:1px;
-    top:9px;
+.menuBtn:active{
+ transform:scale(.95);
 }
 
-.crosshair:after{
-    height:18px;
-    width:1px;
-    left:9px;
+/* игра */
+
+#game{
+ display:none;
+ position:absolute;
+ inset:0;
+ background:#050505;
 }
+
+#back{
+ position:absolute;
+ top:15px;
+ left:15px;
+ z-index:20;
+ width:55px;
+ height:45px;
+ border-radius:12px;
+ border:1px solid #777;
+ background:#111a;
+ color:white;
+ font-size:24px;
+}
+
+#levelText{
+ position:absolute;
+ z-index:20;
+ top:20px;
+ right:18px;
+ font-weight:bold;
+}
+
+canvas{
+ display:block;
+}
+
+/* popup */
 
 .popup{
-    position:fixed;
-    inset:0;
-    display:none;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-    background:rgba(0,0,0,.78);
-    backdrop-filter:blur(8px);
-    z-index:20;
-    color:white;
+ display:none;
+ position:absolute;
+ inset:0;
+ z-index:100;
+ background:#000b;
+ align-items:center;
+ justify-content:center;
+ padding:20px;
 }
 
 .box{
-    width:100%;
-    max-width:370px;
-    background:linear-gradient(145deg,#282d33,#0c0e11);
-    border:1px solid #555;
-    border-radius:20px;
-    padding:24px;
-    text-align:center;
-    box-shadow:0 25px 80px #000;
+ width:100%;
+ max-width:360px;
+ padding:25px;
+ border-radius:20px;
+ background:linear-gradient(145deg,#292d32,#0d0f11);
+ border:1px solid #666;
+ text-align:center;
+ box-shadow:0 20px 70px #000;
 }
 
-.box h2{
-    margin-top:0;
-}
-
-.box p{
-    color:#ccc;
-    line-height:1.5;
-}
-
-input{
-    width:100%;
-    box-sizing:border-box;
-    padding:15px;
-    border-radius:12px;
-    border:1px solid #555;
-    background:#050708;
-    color:#62ffa1;
-    font-size:25px;
-    text-align:center;
-    letter-spacing:8px;
-    outline:none;
-    margin:10px 0;
+.box input{
+ width:100%;
+ padding:14px;
+ margin:10px 0;
+ border-radius:10px;
+ border:1px solid #666;
+ background:#050607;
+ color:#62ff9a;
+ text-align:center;
+ font-size:24px;
+ letter-spacing:8px;
 }
 
 .box button{
-    width:100%;
-    margin-top:8px;
+ width:100%;
+ min-height:48px;
+ margin-top:8px;
+ border-radius:12px;
+ border:1px solid #777;
+ background:#22272c;
+ color:white;
+ font-weight:bold;
 }
 
-#loading{
-    position:fixed;
-    inset:0;
-    background:#050608;
-    color:white;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    z-index:100;
-    font-size:20px;
-    font-weight:bold;
+@media(max-height:700px){
+ .title{margin-top:5vh}
+ .play{bottom:23%;height:65px}
+ .buttons{bottom:3%}
+ .menuBtn{height:75px}
 }
 </style>
 </head>
 
 <body>
 
-<div id="loading">ЗАГРУЗКА 3D...</div>
+<div class="screen" id="menu">
 
-<div id="game"></div>
+ <div class="menu">
 
-<div class="ui">
+  <div class="corridor">
 
-    <div class="top">
-        <div>
-            <div class="title">UNLOCK ROOM</div>
-        </div>
+   <div class="back"></div>
 
-        <div>
-            УРОВЕНЬ 1 / 100
-            <span class="hearts">♥♥♥</span>
-        </div>
-    </div>
+   <div class="door"></div>
 
-    <div class="crosshair"></div>
+   <div class="light left"></div>
+   <div class="light right"></div>
 
-    <div class="bottom">
+   <div class="plant left">
+    <div class="leaf l1"></div>
+    <div class="leaf l2"></div>
+    <div class="leaf l3"></div>
+    <div class="leaf l4"></div>
+    <div class="leaf l5"></div>
+    <div class="pot"></div>
+   </div>
 
-        <button onclick="inventory()">
-            🎒<br>ИНВЕНТАРЬ
-        </button>
+   <div class="plant right">
+    <div class="leaf l1"></div>
+    <div class="leaf l2"></div>
+    <div class="leaf l3"></div>
+    <div class="leaf l4"></div>
+    <div class="leaf l5"></div>
+    <div class="pot"></div>
+   </div>
 
-        <button onclick="hint()">
-            💡<br>ПОДСКАЗКА
-        </button>
+   <div class="floor"></div>
 
-        <button onclick="codePanel()">
-            🔐<br>КОД
-        </button>
+  </div>
 
-    </div>
+  <div class="content">
+
+   <div class="title">
+    РАЗБЛОКИРУЙ
+   </div>
+
+   <div class="subtitle">
+    РЕШАЙ ЗАГАДКИ • ОТКРЫВАЙ ДВЕРИ
+   </div>
+
+   <button class="play" onclick="startGame()">
+    ИГРАТЬ
+   </button>
+
+   <div class="buttons">
+
+    <button class="menuBtn" onclick="settings()">
+     <span class="icon">⚙️</span>
+     НАСТРОЙКИ
+    </button>
+
+    <button class="menuBtn" onclick="levels()">
+     <span class="icon">▥</span>
+     УРОВНИ
+    </button>
+
+    <button class="menuBtn" onclick="shop()">
+     <span class="icon">🛒</span>
+     МАГАЗИН
+    </button>
+
+    <button class="menuBtn" onclick="achievements()">
+     <span class="icon">👑</span>
+     ДОСТИЖЕНИЯ
+    </button>
+
+   </div>
+
+  </div>
+
+ </div>
+
+</div>
+
+
+<div id="game">
+
+ <button id="back" onclick="backMenu()">‹</button>
+
+ <div id="levelText">
+  УРОВЕНЬ 1 / 100 ❤️❤️❤️
+ </div>
 
 </div>
 
 
 <div class="popup" id="popup">
 
-    <div class="box">
+ <div class="box">
 
-        <div id="popupContent"></div>
+  <div id="popupText"></div>
 
-        <input
-            id="codeInput"
-            inputmode="numeric"
-            maxlength="4"
-            placeholder="••••"
-        >
+  <button onclick="closePopup()">
+   ЗАКРЫТЬ
+  </button>
 
-        <button id="submitCode" onclick="checkCode()">
-            ОТКРЫТЬ
-        </button>
-
-        <button onclick="closePopup()">
-            ЗАКРЫТЬ
-        </button>
-
-    </div>
+ </div>
 
 </div>
 
@@ -254,988 +488,374 @@ input{
 let scene;
 let camera;
 let renderer;
+let door3D;
 
-let door;
-let doorOpen=false;
+function startGame(){
 
-let raycaster;
-let mouse;
+ document.getElementById("menu").style.display="none";
+ document.getElementById("game").style.display="block";
 
-let touchStartX=0;
-let touchStartY=0;
-
-let rotationY=0;
-let rotationX=0;
-
-let unlocked=false;
-
-
-/* =========================
-   START
-========================= */
-
-init();
-
-function init(){
-
-    scene=new THREE.Scene();
-
-    scene.background=new THREE.Color(0x07090b);
-
-    scene.fog=new THREE.FogExp2(
-        0x07090b,
-        0.035
-    );
-
-
-    /* CAMERA */
-
-    camera=new THREE.PerspectiveCamera(
-        70,
-        innerWidth/innerHeight,
-        0.05,
-        100
-    );
-
-    camera.position.set(
-        0,
-        1.65,
-        5.2
-    );
-
-
-    /* RENDERER */
-
-    renderer=new THREE.WebGLRenderer({
-        antialias:true
-    });
-
-    renderer.setSize(
-        innerWidth,
-        innerHeight
-    );
-
-    renderer.setPixelRatio(
-        Math.min(devicePixelRatio,2)
-    );
-
-    renderer.shadowMap.enabled=true;
-
-    renderer.shadowMap.type=
-        THREE.PCFSoftShadowMap;
-
-    renderer.outputColorSpace=
-        THREE.SRGBColorSpace;
-
-    document
-        .getElementById("game")
-        .appendChild(renderer.domElement);
-
-
-    /* LIGHTS */
-
-    const ambient=
-        new THREE.HemisphereLight(
-            0x9da6b5,
-            0x08090a,
-            0.45
-        );
-
-    scene.add(ambient);
-
-
-    const ceilingLight=
-        new THREE.PointLight(
-            0xffdca0,
-            8,
-            12
-        );
-
-    ceilingLight.position.set(
-        0,
-        3.7,
-        0
-    );
-
-    ceilingLight.castShadow=true;
-
-    ceilingLight.shadow.mapSize.width=1024;
-    ceilingLight.shadow.mapSize.height=1024;
-
-    scene.add(ceilingLight);
-
-
-    const blueLight=
-        new THREE.PointLight(
-            0x315bff,
-            2.5,
-            8
-        );
-
-    blueLight.position.set(
-        -3,
-        1.5,
-        1
-    );
-
-    scene.add(blueLight);
-
-
-    /* ROOM */
-
-    createRoom();
-
-    createDoor();
-
-    createLock();
-
-    createNote();
-
-    createFurniture();
-
-
-    /* INTERACTION */
-
-    raycaster=new THREE.Raycaster();
-
-    mouse=new THREE.Vector2();
-
-
-    renderer.domElement.addEventListener(
-        "pointerdown",
-        onPointerDown
-    );
-
-    renderer.domElement.addEventListener(
-        "pointerup",
-        onPointerUp
-    );
-
-    window.addEventListener(
-        "resize",
-        resize
-    );
-
-
-    document.getElementById("loading")
-        .style.display="none";
-
-
-    animate();
+ init3D();
 }
 
 
 /* =========================
-   MATERIALS
+   3D LEVEL
 ========================= */
 
-function material(color,roughness=.6){
+function init3D(){
 
-    return new THREE.MeshStandardMaterial({
-        color:color,
-        roughness:roughness,
-        metalness:.05
-    });
+ scene=new THREE.Scene();
 
+ scene.background=new THREE.Color(0x17120d);
+
+ scene.fog=new THREE.Fog(
+  0x17120d,
+  4,
+  16
+ );
+
+
+ camera=new THREE.PerspectiveCamera(
+  65,
+  innerWidth/innerHeight,
+  .1,
+  100
+ );
+
+ camera.position.set(
+  0,
+  1.7,
+  5
+ );
+
+
+ renderer=new THREE.WebGLRenderer({
+  antialias:true
+ });
+
+ renderer.setSize(
+  innerWidth,
+  innerHeight
+ );
+
+ renderer.setPixelRatio(
+  Math.min(devicePixelRatio,2)
+ );
+
+ renderer.shadowMap.enabled=true;
+
+ document
+  .getElementById("game")
+  .appendChild(renderer.domElement);
+
+
+ /* LIGHT */
+
+ const ambient=
+  new THREE.AmbientLight(
+   0xffd7a0,
+   1
+  );
+
+ scene.add(ambient);
+
+
+ const light=
+  new THREE.PointLight(
+   0xffb75b,
+   8,
+   12
+  );
+
+ light.position.set(
+  0,
+  4,
+  1
+ );
+
+ light.castShadow=true;
+
+ scene.add(light);
+
+
+ /* FLOOR */
+
+ const floor=
+  new THREE.Mesh(
+   new THREE.BoxGeometry(
+    12,.15,12
+   ),
+   new THREE.MeshStandardMaterial({
+    color:0x29221b,
+    roughness:.35,
+    metalness:.1
+   })
+  );
+
+ floor.position.y=-.1;
+ floor.receiveShadow=true;
+
+ scene.add(floor);
+
+
+ /* BACK WALL */
+
+ const wall=
+  new THREE.Mesh(
+   new THREE.BoxGeometry(
+    12,5,.25
+   ),
+   new THREE.MeshStandardMaterial({
+    color:0x4a3726,
+    roughness:.8
+   })
+  );
+
+ wall.position.set(
+   0,2.5,-2
+  );
+
+ scene.add(wall);
+
+
+ /* DOOR FRAME */
+
+ const frame=
+  new THREE.Mesh(
+   new THREE.BoxGeometry(
+    3.8,4.4,.45
+   ),
+   new THREE.MeshStandardMaterial({
+    color:0x17120e,
+    roughness:.5
+   })
+  );
+
+ frame.position.set(
+   0,2.2,-1.72
+  );
+
+ frame.castShadow=true;
+
+ scene.add(frame);
+
+
+ /* REAL DOOR */
+
+ door3D=
+  new THREE.Mesh(
+   new THREE.BoxGeometry(
+    3.15,3.9,.18
+   ),
+   new THREE.MeshStandardMaterial({
+    color:0x70421e,
+    roughness:.38,
+    metalness:.08
+   })
+  );
+
+ door3D.position.set(
+   0,2,-1.48
+  );
+
+ door3D.castShadow=true;
+
+ scene.add(door3D);
+
+
+ /* DOOR PANELS */
+
+ for(let y of [.7,2,3.3]){
+
+  const panel=
+   new THREE.Mesh(
+    new THREE.BoxGeometry(
+     2.5,.75,.04
+    ),
+    new THREE.MeshStandardMaterial({
+     color:0x4a2812,
+     roughness:.45
+    })
+   );
+
+  panel.position.set(
+   0,y,-1.37
+  );
+
+  scene.add(panel);
+
+ }
+
+
+ /* HANDLE */
+
+ const handle=
+  new THREE.Mesh(
+   new THREE.CylinderGeometry(
+    .06,.06,.7,20
+   ),
+   new THREE.MeshStandardMaterial({
+    color:0xd6a75e,
+    metalness:.8,
+    roughness:.2
+   })
+  );
+
+ handle.rotation.z=Math.PI/2;
+
+ handle.position.set(
+   1.05,2,-1.35
+  );
+
+ scene.add(handle);
+
+
+ /* PLANTS */
+
+ createPlant(-3.7,.3);
+ createPlant(3.7,.3);
+
+
+ /* LOOP */
+
+ animate();
 }
 
 
-/* =========================
-   ROOM
-========================= */
+function createPlant(x,z){
 
-function createRoom(){
+ const pot=
+  new THREE.Mesh(
+   new THREE.CylinderGeometry(
+    .35,.45,.7,20
+   ),
+   new THREE.MeshStandardMaterial({
+    color:0x181818,
+    roughness:.65
+   })
+  );
 
-    /* FLOOR */
+ pot.position.set(
+   x,.35,z
+  );
 
-    const floor=
-        new THREE.Mesh(
-            new THREE.PlaneGeometry(
-                12,12
-            ),
-            material(0x25282b,.8)
-        );
-
-    floor.rotation.x=-Math.PI/2;
-
-    floor.receiveShadow=true;
-
-    scene.add(floor);
+ scene.add(pot);
 
 
-    /* FLOOR BOARDS */
+ for(let i=0;i<7;i++){
 
-    for(let x=-6;x<=6;x+=1){
+  const leaf=
+   new THREE.Mesh(
+    new THREE.SphereGeometry(
+     .18,.15,.45
+    ),
+    new THREE.MeshStandardMaterial({
+     color:0x24451d,
+     roughness:.8
+    })
+   );
 
-        const line=
-            new THREE.Mesh(
-                new THREE.BoxGeometry(
-                    .012,.008,12
-                ),
-                material(0x111214)
-            );
+  leaf.scale.y=2;
 
-        line.position.set(
-            x,
-            .006,
-            0
-        );
+  leaf.position.set(
+   x+(Math.random()-.5)*.6,
+   1+i*.18,
+   z+(Math.random()-.5)*.4
+  );
 
-        scene.add(line);
-
-    }
-
-
-    /* BACK WALL */
-
-    const back=
-        new THREE.Mesh(
-            new THREE.BoxGeometry(
-                12,4.5,.25
-            ),
-            material(0x303337,.85)
-        );
-
-    back.position.set(
-        0,
-        2.25,
-        -1.8
-    );
-
-    back.receiveShadow=true;
-
-    scene.add(back);
-
-
-    /* LEFT WALL */
-
-    const left=
-        new THREE.Mesh(
-            new THREE.BoxGeometry(
-                .25,4.5,12
-            ),
-            material(0x24272a,.9)
-        );
-
-    left.position.set(
-        -6,
-        2.25,
-        4
-    );
-
-    scene.add(left);
-
-
-    /* RIGHT WALL */
-
-    const right=
-        left.clone();
-
-    right.position.x=6;
-
-    scene.add(right);
-
-
-    /* CEILING */
-
-    const ceiling=
-        new THREE.Mesh(
-            new THREE.BoxGeometry(
-                12,.25,12
-            ),
-            material(0x121416,.9)
-        );
-
-    ceiling.position.y=4.5;
-
-    scene.add(ceiling);
-
-
-    /* CEILING PANEL */
-
-    const lamp=
-        new THREE.Mesh(
-            new THREE.BoxGeometry(
-                2.8,.04,.35
-            ),
-            new THREE.MeshStandardMaterial({
-                color:0xffffff,
-                emissive:0xffdca0,
-                emissiveIntensity:2
-            })
-        );
-
-    lamp.position.set(
-        0,
-        4.34,
-        0
-    );
-
-    scene.add(lamp);
-
+  scene.add(leaf);
+ }
 }
 
-
-/* =========================
-   DOOR
-========================= */
-
-function createDoor(){
-
-    const frameMat=
-        material(0x111315,.7);
-
-
-    /* FRAME */
-
-    const frame=
-        new THREE.Mesh(
-            new THREE.BoxGeometry(
-                3.4,
-                4.0,
-                .3
-            ),
-            frameMat
-        );
-
-    frame.position.set(
-        0,
-        2,
-        -1.58
-    );
-
-    frame.castShadow=true;
-
-    scene.add(frame);
-
-
-    /* DOOR PIVOT */
-
-    const pivot=
-        new THREE.Group();
-
-    pivot.position.set(
-        -1.45,
-        2,
-        -1.78
-    );
-
-    scene.add(pivot);
-
-
-    door=
-        new THREE.Mesh(
-            new THREE.BoxGeometry(
-                2.9,
-                3.7,
-                .16
-            ),
-            material(0x222529,.55)
-        );
-
-    door.position.set(
-        1.45,
-        0,
-        0
-    );
-
-    door.castShadow=true;
-
-    pivot.add(door);
-
-    door.userData.type="door";
-
-
-    /* INNER PANEL */
-
-    const inner=
-        new THREE.Mesh(
-            new THREE.BoxGeometry(
-                2.45,
-                3.2,
-                .04
-            ),
-            material(0x181b1e,.65)
-        );
-
-    inner.position.z=.11;
-
-    door.add(inner);
-
-
-    /* HANDLE */
-
-    const handle=
-        new THREE.Mesh(
-            new THREE.CylinderGeometry(
-                .06,
-                .06,
-                .65,
-                20
-            ),
-            material(0xd7d7d7,.25)
-        );
-
-    handle.rotation.z=Math.PI/2;
-
-    handle.position.set(
-        .95,
-        0,
-        .13
-    );
-
-    door.add(handle);
-
-
-}
-
-
-/* =========================
-   CODE PANEL
-========================= */
-
-function createLock(){
-
-    const body=
-        new THREE.Mesh(
-            new THREE.BoxGeometry(
-                .7,
-                1.0,
-                .18
-            ),
-            material(0x15181b,.35)
-        );
-
-    body.position.set(
-        -2.2,
-        1.7,
-        -1.35
-    );
-
-    body.castShadow=true;
-
-    body.userData.type="lock";
-
-    scene.add(body);
-
-
-    const screen=
-        new THREE.Mesh(
-            new THREE.BoxGeometry(
-                .52,
-                .3,
-                .025
-            ),
-            new THREE.MeshStandardMaterial({
-                color:0x00130a,
-                emissive:0x00ff77,
-                emissiveIntensity:.5
-            })
-        );
-
-    screen.position.set(
-        -2.2,
-        1.85,
-        -1.45
-    );
-
-    screen.userData.type="lock";
-
-    scene.add(screen);
-
-
-    /* LEDs */
-
-    const colors=[
-        0xff2222,
-        0xffc928,
-        0x29e878
-    ];
-
-    colors.forEach((c,i)=>{
-
-        const led=
-            new THREE.Mesh(
-                new THREE.SphereGeometry(
-                    .07,16,16
-                ),
-                new THREE.MeshStandardMaterial({
-                    color:c,
-                    emissive:c,
-                    emissiveIntensity:2
-                })
-            );
-
-        led.position.set(
-            -2.42+i*.22,
-            1.48,
-            -1.47
-        );
-
-        led.userData.type="lock";
-
-        scene.add(led);
-
-    });
-
-}
-
-
-/* =========================
-   NOTE
-========================= */
-
-function createNote(){
-
-    const note=
-        new THREE.Mesh(
-            new THREE.BoxGeometry(
-                1.05,
-                .75,
-                .025
-            ),
-            material(0xdcc88f,.9)
-        );
-
-    note.position.set(
-        2.1,
-        2.15,
-        -1.38
-    );
-
-    note.rotation.z=-.08;
-
-    note.rotation.y=.03;
-
-    note.userData.type="note";
-
-    scene.add(note);
-
-}
-
-
-/* =========================
-   FURNITURE
-========================= */
-
-function createFurniture(){
-
-    const table=
-        new THREE.Mesh(
-            new THREE.BoxGeometry(
-                1.8,
-                .12,
-                .8
-            ),
-            material(0x30251d,.6)
-        );
-
-    table.position.set(
-        3.5,
-        1,
-        .5
-    );
-
-    table.castShadow=true;
-
-    scene.add(table);
-
-
-    for(let x of [3.0,4.0]){
-
-        const leg=
-            new THREE.Mesh(
-                new THREE.BoxGeometry(
-                    .1,1,.1
-                ),
-                material(0x161719)
-            );
-
-        leg.position.set(
-            x,
-            .5,
-            .5
-        );
-
-        leg.castShadow=true;
-
-        scene.add(leg);
-
-    }
-
-}
-
-
-/* =========================
-   TOUCH
-========================= */
-
-function onPointerDown(e){
-
-    touchStartX=e.clientX;
-    touchStartY=e.clientY;
-
-}
-
-
-function onPointerUp(e){
-
-    const dx=e.clientX-touchStartX;
-    const dy=e.clientY-touchStartY;
-
-    if(Math.abs(dx)>30){
-
-        rotationY-=dx*.004;
-
-    }
-
-    if(Math.abs(dy)>30){
-
-        rotationX-=dy*.002;
-
-        rotationX=
-            Math.max(
-                -.7,
-                Math.min(.7,rotationX)
-            );
-
-    }
-
-    if(Math.abs(dx)<15 && Math.abs(dy)<15){
-
-        interact(e.clientX,e.clientY);
-
-    }
-
-}
-
-
-/* =========================
-   INTERACTION
-========================= */
-
-function interact(x,y){
-
-    mouse.x=
-        (x/innerWidth)*2-1;
-
-    mouse.y=
-        -(y/innerHeight)*2+1;
-
-    raycaster.setFromCamera(
-        mouse,
-        camera
-    );
-
-    const hits=
-        raycaster.intersectObjects(
-            scene.children,
-            true
-        );
-
-    if(!hits.length)return;
-
-    let obj=hits[0].object;
-
-    while(obj && !obj.userData.type){
-
-        obj=obj.parent;
-
-    }
-
-    if(!obj)return;
-
-    if(obj.userData.type==="lock"){
-
-        codePanel();
-
-    }
-
-    if(obj.userData.type==="note"){
-
-        note();
-
-    }
-
-    if(obj.userData.type==="door"){
-
-        if(unlocked){
-
-            openDoor();
-
-        }else{
-
-            codePanel();
-
-        }
-
-    }
-
-}
-
-
-/* =========================
-   CODE
-========================= */
-
-function codePanel(){
-
-    document.getElementById("popupContent")
-        .innerHTML=`
-        <h2>🔐 КОДОВАЯ ПАНЕЛЬ</h2>
-        <p>Найди четыре цифры и открой дверь.</p>
-        `;
-
-    document.getElementById("codeInput")
-        .style.display="block";
-
-    document.getElementById("submitCode")
-        .style.display="block";
-
-    document.getElementById("popup")
-        .style.display="flex";
-
-    setTimeout(()=>{
-        document.getElementById("codeInput").focus();
-    },150);
-
-}
-
-
-/* =========================
-   CHECK CODE
-========================= */
-
-function checkCode(){
-
-    const value=
-        document.getElementById("codeInput").value;
-
-    if(value==="7294"){
-
-        unlocked=true;
-
-        openDoor();
-
-        document.getElementById("popupContent")
-            .innerHTML=`
-            <div style="font-size:48px">🎉</div>
-            <h2>УРОВЕНЬ ПРОЙДЕН!</h2>
-            <p>
-            Код <b>7294</b> принят.
-            <br><br>
-            ⭐⭐⭐
-            </p>
-            `;
-
-        document.getElementById("codeInput")
-            .style.display="none";
-
-        document.getElementById("submitCode")
-            .style.display="none";
-
-    }else{
-
-        document.getElementById("popupContent")
-            .innerHTML=`
-            <h2>❌ НЕВЕРНЫЙ КОД</h2>
-            <p>Попробуй ещё раз.</p>
-            `;
-
-    }
-
-}
-
-
-/* =========================
-   DOOR OPEN
-========================= */
-
-function openDoor(){
-
-    if(doorOpen)return;
-
-    doorOpen=true;
-
-    let start=null;
-
-    function animateDoor(time){
-
-        if(!start)start=time;
-
-        let p=
-            Math.min(
-                (time-start)/1200,
-                1
-            );
-
-        door.parent.rotation.y=
-            -p*1.35;
-
-        if(p<1){
-
-            requestAnimationFrame(
-                animateDoor
-            );
-
-        }
-
-    }
-
-    requestAnimationFrame(
-        animateDoor
-    );
-
-}
-
-
-/* =========================
-   NOTE
-========================= */
-
-function note(){
-
-    document.getElementById("popupContent")
-        .innerHTML=`
-        <h2>📝 ЗАПИСКА</h2>
-        <p>
-        Цвета знают путь.
-        <br><br>
-        🔴 Красный = 7
-        <br>
-        🟡 Жёлтый = 2
-        <br>
-        🟢 Зелёный = 9
-        <br><br>
-        Последняя цифра спрятана на двери.
-        </p>
-        `;
-
-    document.getElementById("codeInput")
-        .style.display="none";
-
-    document.getElementById("submitCode")
-        .style.display="none";
-
-    document.getElementById("popup")
-        .style.display="flex";
-
-}
-
-
-/* =========================
-   HINT
-========================= */
-
-function hint(){
-
-    document.getElementById("popupContent")
-        .innerHTML=`
-        <h2>💡 ПОДСКАЗКА</h2>
-        <p>
-        Посмотри на цвета панели.
-        <br><br>
-        Последняя цифра — <b>4</b>.
-        <br><br>
-        Полный код: <b>7294</b>
-        </p>
-        `;
-
-    document.getElementById("codeInput")
-        .style.display="none";
-
-    document.getElementById("submitCode")
-        .style.display="none";
-
-    document.getElementById("popup")
-        .style.display="flex";
-
-}
-
-
-/* =========================
-   INVENTORY
-========================= */
-
-function inventory(){
-
-    document.getElementById("popupContent")
-        .innerHTML=`
-        <h2>🎒 ИНВЕНТАРЬ</h2>
-        <p>
-        ${unlocked
-        ?"🔑 Дверь открыта"
-        :"Инвентарь пока пуст."}
-        </p>
-        `;
-
-    document.getElementById("codeInput")
-        .style.display="none";
-
-    document.getElementById("submitCode")
-        .style.display="none";
-
-    document.getElementById("popup")
-        .style.display="flex";
-
-}
-
-
-/* =========================
-   CLOSE
-========================= */
-
-function closePopup(){
-
-    document.getElementById("popup")
-        .style.display="none";
-
-}
-
-
-/* =========================
-   RESIZE
-========================= */
-
-function resize(){
-
-    camera.aspect=
-        innerWidth/innerHeight;
-
-    camera.updateProjectionMatrix();
-
-    renderer.setSize(
-        innerWidth,
-        innerHeight
-    );
-
-}
-
-
-/* =========================
-   LOOP
-========================= */
 
 function animate(){
 
-    requestAnimationFrame(animate);
+ requestAnimationFrame(animate);
+
+ renderer.render(
+  scene,
+  camera
+ );
+}
 
 
-    /* CAMERA */
+function backMenu(){
 
-    camera.rotation.order="YXZ";
-
-    camera.rotation.y=rotationY;
-
-    camera.rotation.x=rotationX;
-
-
-    renderer.render(
-        scene,
-        camera
-    );
+ document.getElementById("game").style.display="none";
+ document.getElementById("menu").style.display="block";
 
 }
+
+
+/* MENU */
+
+function showMessage(title,text){
+
+ document.getElementById("popupText").innerHTML=
+  "<h2>"+title+"</h2><p>"+text+"</p>";
+
+ document.getElementById("popup").style.display="flex";
+}
+
+function closePopup(){
+
+ document.getElementById("popup").style.display="none";
+
+}
+
+function settings(){
+
+ showMessage(
+  "⚙️ НАСТРОЙКИ",
+  "Звук: ВКЛ<br>Музыка: ВКЛ<br>Язык: Русский"
+ );
+
+}
+
+function levels(){
+
+ showMessage(
+  "▥ УРОВНИ",
+  "🔓 Уровень 1<br><br>🔒 Уровни 2–100"
+ );
+
+}
+
+function shop(){
+
+ showMessage(
+  "🛒 МАГАЗИН",
+  "Скоро здесь появятся подсказки, ключи и специальные предметы."
+ );
+
+}
+
+function achievements(){
+
+ showMessage(
+  "👑 ДОСТИЖЕНИЯ",
+  "🏆 Первое открытие<br>🔐 Мастер кодов<br>🚪 Побег"
+ );
+
+}
+
+window.addEventListener(
+ "resize",
+ ()=>{
+  if(!camera)return;
+
+  camera.aspect=
+   innerWidth/innerHeight;
+
+  camera.updateProjectionMatrix();
+
+  renderer.setSize(
+   innerWidth,
+   innerHeight
+  );
+ }
+);
 
 </script>
 
