@@ -2,599 +2,1238 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>UNLOCK ROOM</title>
+<meta name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>UNLOCK ROOM — 3D</title>
 
 <style>
-*{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
-}
-
 html,body{
-  margin:0;
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  background:#050608;
-  color:#fff;
-  font-family:Arial,sans-serif;
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#000;
+    font-family:Arial,sans-serif;
+    touch-action:none;
 }
 
-body{
-  user-select:none;
+#game{
+    position:fixed;
+    inset:0;
 }
 
-.game{
-  position:relative;
-  width:100%;
-  height:100dvh;
-  overflow:hidden;
-  background:
-    radial-gradient(circle at 50% 25%,rgba(110,92,58,.35),transparent 35%),
-    linear-gradient(#111316,#050608);
+canvas{
+    display:block;
 }
 
-/* TOP BAR */
+.ui{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    color:white;
+}
 
 .top{
-  position:absolute;
-  z-index:20;
-  top:0;
-  left:0;
-  right:0;
-  padding:18px 16px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  font-size:14px;
-  font-weight:bold;
-  letter-spacing:.5px;
-  background:linear-gradient(#050608dd,transparent);
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    padding:18px 16px;
+    display:flex;
+    justify-content:space-between;
+    font-weight:bold;
+    text-shadow:0 2px 8px #000;
+    font-size:14px;
 }
 
-.logo{
-  font-size:19px;
-  letter-spacing:1px;
+.title{
+    font-size:20px;
+    letter-spacing:1px;
 }
 
 .hearts{
-  color:#ff3030;
-  font-size:19px;
+    color:#ff3030;
+    font-size:18px;
 }
-
-/* ROOM */
-
-.room{
-  position:absolute;
-  left:0;
-  right:0;
-  top:0;
-  bottom:80px;
-  perspective:900px;
-  overflow:hidden;
-}
-
-/* FLOOR */
-
-.floor{
-  position:absolute;
-  left:-20%;
-  right:-20%;
-  bottom:-18%;
-  height:42%;
-  background:
-    repeating-linear-gradient(
-      90deg,
-      #17191c 0,
-      #17191c 48px,
-      #101214 50px
-    );
-  transform:perspective(500px) rotateX(58deg);
-  transform-origin:center top;
-  box-shadow:0 -20px 50px #000 inset;
-}
-
-/* WALL */
-
-.wall{
-  position:absolute;
-  inset:0;
-  background:
-    linear-gradient(
-      90deg,
-      #090b0d 0%,
-      #292c2f 23%,
-      #34373a 50%,
-      #292c2f 77%,
-      #090b0d 100%
-    );
-}
-
-/* LIGHT */
-
-.ceilingLight{
-  position:absolute;
-  top:11%;
-  left:50%;
-  width:180px;
-  height:15px;
-  transform:translateX(-50%);
-  background:#fff;
-  border-radius:50%;
-  filter:blur(7px);
-  opacity:.6;
-  box-shadow:
-    0 0 45px 18px rgba(255,230,180,.18),
-    0 120px 160px rgba(255,220,170,.08);
-}
-
-/* DOOR */
-
-.doorFrame{
-  position:absolute;
-  width:66%;
-  height:66%;
-  left:50%;
-  top:19%;
-  transform:translateX(-50%);
-  background:#08090a;
-  padding:12px;
-  box-shadow:
-    0 25px 70px #000,
-    0 0 0 1px #414348;
-}
-
-.door{
-  position:relative;
-  width:100%;
-  height:100%;
-  background:
-    linear-gradient(
-      90deg,
-      #111315,
-      #292c2f 45%,
-      #191b1e 70%,
-      #0d0f11
-    );
-  border:1px solid #55585c;
-  transition:transform 1s ease,opacity 1s ease;
-  transform-origin:left center;
-  box-shadow:inset 0 0 40px #000;
-}
-
-.door.open{
-  transform:perspective(900px) rotateY(-72deg);
-}
-
-/* door panels */
-
-.panelLine{
-  position:absolute;
-  left:10%;
-  right:10%;
-  top:8%;
-  bottom:8%;
-  border:1px solid #5a5d61;
-  box-shadow:inset 0 0 20px #000;
-}
-
-.panelLine:after{
-  content:"";
-  position:absolute;
-  left:7%;
-  right:7%;
-  top:7%;
-  bottom:7%;
-  border:1px solid #24272a;
-}
-
-/* HANDLE */
-
-.handle{
-  position:absolute;
-  right:9%;
-  top:48%;
-  width:10px;
-  height:60px;
-  border-radius:10px;
-  background:linear-gradient(#eee,#777);
-  box-shadow:0 3px 8px #000;
-}
-
-/* LOCK */
-
-.lock{
-  position:absolute;
-  left:6%;
-  top:39%;
-  width:78px;
-  height:105px;
-  border-radius:13px;
-  padding:8px;
-  background:linear-gradient(145deg,#383b3e,#101214);
-  border:2px solid #62666a;
-  box-shadow:
-    0 12px 30px #000,
-    inset 0 0 15px #000;
-  z-index:5;
-}
-
-.display{
-  height:48px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:#020906;
-  color:#56ff9b;
-  font-family:monospace;
-  font-size:17px;
-  letter-spacing:3px;
-  border:1px solid #173b2a;
-  box-shadow:inset 0 0 15px #000;
-}
-
-.lights{
-  display:flex;
-  justify-content:center;
-  gap:8px;
-  margin-top:10px;
-}
-
-.light{
-  width:9px;
-  height:9px;
-  border-radius:50%;
-  box-shadow:0 0 8px currentColor;
-}
-
-.red{background:#ff2222;color:#ff2222}
-.yellow{background:#ffc928;color:#ffc928}
-.green{background:#26e67a;color:#26e67a}
-
-/* NOTE */
-
-.note{
-  position:absolute;
-  right:6%;
-  top:29%;
-  width:105px;
-  min-height:92px;
-  padding:13px;
-  background:linear-gradient(135deg,#f1e1a9,#cdbb80);
-  color:#292316;
-  transform:rotate(5deg);
-  box-shadow:0 12px 25px #000;
-  z-index:6;
-  font-size:12px;
-  line-height:1.35;
-}
-
-.note b{
-  font-size:14px;
-}
-
-/* BOTTOM */
 
 .bottom{
-  position:absolute;
-  z-index:30;
-  left:0;
-  right:0;
-  bottom:0;
-  height:82px;
-  padding:10px;
-  display:flex;
-  gap:8px;
-  background:linear-gradient(transparent,#050608 20%);
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    display:flex;
+    gap:8px;
+    padding:12px;
+    background:linear-gradient(transparent,rgba(0,0,0,.9));
+    pointer-events:auto;
 }
 
 button{
-  flex:1;
-  border:1px solid #45484d;
-  border-radius:13px;
-  background:linear-gradient(#24282d,#111316);
-  color:#fff;
-  font-weight:bold;
-  font-size:12px;
-  box-shadow:0 5px 15px #000;
+    flex:1;
+    min-height:58px;
+    border-radius:14px;
+    border:1px solid #666;
+    background:linear-gradient(#292d33,#111318);
+    color:white;
+    font-size:12px;
+    font-weight:bold;
+    box-shadow:0 6px 20px #000;
 }
 
 button:active{
-  transform:scale(.96);
+    transform:scale(.96);
 }
 
-/* POPUP */
+.crosshair{
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:18px;
+    height:18px;
+    transform:translate(-50%,-50%);
+    opacity:.55;
+}
+
+.crosshair:before,
+.crosshair:after{
+    content:"";
+    position:absolute;
+    background:white;
+}
+
+.crosshair:before{
+    width:18px;
+    height:1px;
+    top:9px;
+}
+
+.crosshair:after{
+    height:18px;
+    width:1px;
+    left:9px;
+}
 
 .popup{
-  display:none;
-  position:absolute;
-  z-index:100;
-  inset:0;
-  align-items:center;
-  justify-content:center;
-  padding:25px;
-  background:rgba(0,0,0,.78);
-  backdrop-filter:blur(7px);
+    position:fixed;
+    inset:0;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    background:rgba(0,0,0,.78);
+    backdrop-filter:blur(8px);
+    z-index:20;
+    color:white;
 }
 
 .box{
-  width:100%;
-  max-width:360px;
-  padding:25px;
-  border-radius:20px;
-  border:1px solid #555;
-  background:
-    linear-gradient(145deg,#25292e,#101215);
-  box-shadow:0 25px 80px #000;
-  text-align:center;
+    width:100%;
+    max-width:370px;
+    background:linear-gradient(145deg,#282d33,#0c0e11);
+    border:1px solid #555;
+    border-radius:20px;
+    padding:24px;
+    text-align:center;
+    box-shadow:0 25px 80px #000;
 }
 
 .box h2{
-  margin-top:0;
+    margin-top:0;
 }
 
 .box p{
-  color:#c9c9c9;
-  line-height:1.5;
+    color:#ccc;
+    line-height:1.5;
 }
 
 input{
-  width:100%;
-  padding:15px;
-  border-radius:12px;
-  border:1px solid #555;
-  background:#050708;
-  color:#59ff9b;
-  text-align:center;
-  font-size:25px;
-  letter-spacing:8px;
-  outline:none;
+    width:100%;
+    box-sizing:border-box;
+    padding:15px;
+    border-radius:12px;
+    border:1px solid #555;
+    background:#050708;
+    color:#62ffa1;
+    font-size:25px;
+    text-align:center;
+    letter-spacing:8px;
+    outline:none;
+    margin:10px 0;
 }
 
-.popup button{
-  width:100%;
-  min-height:48px;
-  margin-top:10px;
+.box button{
+    width:100%;
+    margin-top:8px;
 }
 
-.success{
-  font-size:42px;
-  margin:10px;
-}
-
-/* MOBILE */
-
-@media(max-height:650px){
-  .doorFrame{
-    height:61%;
-    top:18%;
-  }
-
-  .lock{
-    top:38%;
-    transform:scale(.9);
-    transform-origin:left center;
-  }
-
-  .note{
-    top:28%;
-    transform:scale(.9);
-    transform-origin:right top;
-  }
+#loading{
+    position:fixed;
+    inset:0;
+    background:#050608;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:100;
+    font-size:20px;
+    font-weight:bold;
 }
 </style>
 </head>
 
 <body>
 
-<div class="game">
+<div id="loading">ЗАГРУЗКА 3D...</div>
 
-  <div class="top">
-    <div class="logo">UNLOCK ROOM</div>
-    <div>УРОВЕНЬ 1 / 100 <span class="hearts">♥♥♥</span></div>
-  </div>
+<div id="game"></div>
 
-  <div class="room">
+<div class="ui">
 
-    <div class="wall"></div>
+    <div class="top">
+        <div>
+            <div class="title">UNLOCK ROOM</div>
+        </div>
 
-    <div class="ceilingLight"></div>
-
-    <div class="doorFrame">
-      <div class="door" id="door">
-        <div class="panelLine"></div>
-        <div class="handle"></div>
-      </div>
+        <div>
+            УРОВЕНЬ 1 / 100
+            <span class="hearts">♥♥♥</span>
+        </div>
     </div>
 
-    <div class="lock" onclick="openCode()">
-      <div class="display" id="display">----</div>
-      <div class="lights">
-        <div class="light red"></div>
-        <div class="light yellow"></div>
-        <div class="light green"></div>
-      </div>
-    </div>
+    <div class="crosshair"></div>
 
-    <div class="note" onclick="openNote()">
-      <b>ЗАПИСКА</b><br><br>
-      Цвета<br>
-      знают путь.
-    </div>
+    <div class="bottom">
 
-    <div class="floor"></div>
+        <button onclick="inventory()">
+            🎒<br>ИНВЕНТАРЬ
+        </button>
 
-  </div>
+        <button onclick="hint()">
+            💡<br>ПОДСКАЗКА
+        </button>
 
-  <div class="bottom">
-    <button onclick="inventory()">🎒<br>ИНВЕНТАРЬ</button>
-    <button onclick="hint()">💡<br>ПОДСКАЗКА</button>
-    <button onclick="openCode()">🔐<br>КОД</button>
-  </div>
-
-  <div class="popup" id="popup">
-
-    <div class="box">
-
-      <div id="content"></div>
-
-      <input
-        id="codeInput"
-        inputmode="numeric"
-        maxlength="4"
-        placeholder="••••"
-      >
-
-      <button id="openButton" onclick="checkCode()">
-        ОТКРЫТЬ
-      </button>
-
-      <button onclick="closePopup()">
-        ЗАКРЫТЬ
-      </button>
+        <button onclick="codePanel()">
+            🔐<br>КОД
+        </button>
 
     </div>
-
-  </div>
 
 </div>
 
+
+<div class="popup" id="popup">
+
+    <div class="box">
+
+        <div id="popupContent"></div>
+
+        <input
+            id="codeInput"
+            inputmode="numeric"
+            maxlength="4"
+            placeholder="••••"
+        >
+
+        <button id="submitCode" onclick="checkCode()">
+            ОТКРЫТЬ
+        </button>
+
+        <button onclick="closePopup()">
+            ЗАКРЫТЬ
+        </button>
+
+    </div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
 <script>
 
-let unlocked = false;
+let scene;
+let camera;
+let renderer;
 
-function popup(html, input=false){
+let door;
+let doorOpen=false;
 
-  document.getElementById("content").innerHTML = html;
+let raycaster;
+let mouse;
 
-  const inp = document.getElementById("codeInput");
-  const btn = document.getElementById("openButton");
+let touchStartX=0;
+let touchStartY=0;
 
-  inp.style.display = input ? "block" : "none";
-  btn.style.display = input ? "block" : "none";
+let rotationY=0;
+let rotationX=0;
 
-  document.getElementById("popup").style.display = "flex";
+let unlocked=false;
 
-  if(input){
+
+/* =========================
+   START
+========================= */
+
+init();
+
+function init(){
+
+    scene=new THREE.Scene();
+
+    scene.background=new THREE.Color(0x07090b);
+
+    scene.fog=new THREE.FogExp2(
+        0x07090b,
+        0.035
+    );
+
+
+    /* CAMERA */
+
+    camera=new THREE.PerspectiveCamera(
+        70,
+        innerWidth/innerHeight,
+        0.05,
+        100
+    );
+
+    camera.position.set(
+        0,
+        1.65,
+        5.2
+    );
+
+
+    /* RENDERER */
+
+    renderer=new THREE.WebGLRenderer({
+        antialias:true
+    });
+
+    renderer.setSize(
+        innerWidth,
+        innerHeight
+    );
+
+    renderer.setPixelRatio(
+        Math.min(devicePixelRatio,2)
+    );
+
+    renderer.shadowMap.enabled=true;
+
+    renderer.shadowMap.type=
+        THREE.PCFSoftShadowMap;
+
+    renderer.outputColorSpace=
+        THREE.SRGBColorSpace;
+
+    document
+        .getElementById("game")
+        .appendChild(renderer.domElement);
+
+
+    /* LIGHTS */
+
+    const ambient=
+        new THREE.HemisphereLight(
+            0x9da6b5,
+            0x08090a,
+            0.45
+        );
+
+    scene.add(ambient);
+
+
+    const ceilingLight=
+        new THREE.PointLight(
+            0xffdca0,
+            8,
+            12
+        );
+
+    ceilingLight.position.set(
+        0,
+        3.7,
+        0
+    );
+
+    ceilingLight.castShadow=true;
+
+    ceilingLight.shadow.mapSize.width=1024;
+    ceilingLight.shadow.mapSize.height=1024;
+
+    scene.add(ceilingLight);
+
+
+    const blueLight=
+        new THREE.PointLight(
+            0x315bff,
+            2.5,
+            8
+        );
+
+    blueLight.position.set(
+        -3,
+        1.5,
+        1
+    );
+
+    scene.add(blueLight);
+
+
+    /* ROOM */
+
+    createRoom();
+
+    createDoor();
+
+    createLock();
+
+    createNote();
+
+    createFurniture();
+
+
+    /* INTERACTION */
+
+    raycaster=new THREE.Raycaster();
+
+    mouse=new THREE.Vector2();
+
+
+    renderer.domElement.addEventListener(
+        "pointerdown",
+        onPointerDown
+    );
+
+    renderer.domElement.addEventListener(
+        "pointerup",
+        onPointerUp
+    );
+
+    window.addEventListener(
+        "resize",
+        resize
+    );
+
+
+    document.getElementById("loading")
+        .style.display="none";
+
+
+    animate();
+}
+
+
+/* =========================
+   MATERIALS
+========================= */
+
+function material(color,roughness=.6){
+
+    return new THREE.MeshStandardMaterial({
+        color:color,
+        roughness:roughness,
+        metalness:.05
+    });
+
+}
+
+
+/* =========================
+   ROOM
+========================= */
+
+function createRoom(){
+
+    /* FLOOR */
+
+    const floor=
+        new THREE.Mesh(
+            new THREE.PlaneGeometry(
+                12,12
+            ),
+            material(0x25282b,.8)
+        );
+
+    floor.rotation.x=-Math.PI/2;
+
+    floor.receiveShadow=true;
+
+    scene.add(floor);
+
+
+    /* FLOOR BOARDS */
+
+    for(let x=-6;x<=6;x+=1){
+
+        const line=
+            new THREE.Mesh(
+                new THREE.BoxGeometry(
+                    .012,.008,12
+                ),
+                material(0x111214)
+            );
+
+        line.position.set(
+            x,
+            .006,
+            0
+        );
+
+        scene.add(line);
+
+    }
+
+
+    /* BACK WALL */
+
+    const back=
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                12,4.5,.25
+            ),
+            material(0x303337,.85)
+        );
+
+    back.position.set(
+        0,
+        2.25,
+        -1.8
+    );
+
+    back.receiveShadow=true;
+
+    scene.add(back);
+
+
+    /* LEFT WALL */
+
+    const left=
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                .25,4.5,12
+            ),
+            material(0x24272a,.9)
+        );
+
+    left.position.set(
+        -6,
+        2.25,
+        4
+    );
+
+    scene.add(left);
+
+
+    /* RIGHT WALL */
+
+    const right=
+        left.clone();
+
+    right.position.x=6;
+
+    scene.add(right);
+
+
+    /* CEILING */
+
+    const ceiling=
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                12,.25,12
+            ),
+            material(0x121416,.9)
+        );
+
+    ceiling.position.y=4.5;
+
+    scene.add(ceiling);
+
+
+    /* CEILING PANEL */
+
+    const lamp=
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                2.8,.04,.35
+            ),
+            new THREE.MeshStandardMaterial({
+                color:0xffffff,
+                emissive:0xffdca0,
+                emissiveIntensity:2
+            })
+        );
+
+    lamp.position.set(
+        0,
+        4.34,
+        0
+    );
+
+    scene.add(lamp);
+
+}
+
+
+/* =========================
+   DOOR
+========================= */
+
+function createDoor(){
+
+    const frameMat=
+        material(0x111315,.7);
+
+
+    /* FRAME */
+
+    const frame=
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                3.4,
+                4.0,
+                .3
+            ),
+            frameMat
+        );
+
+    frame.position.set(
+        0,
+        2,
+        -1.58
+    );
+
+    frame.castShadow=true;
+
+    scene.add(frame);
+
+
+    /* DOOR PIVOT */
+
+    const pivot=
+        new THREE.Group();
+
+    pivot.position.set(
+        -1.45,
+        2,
+        -1.78
+    );
+
+    scene.add(pivot);
+
+
+    door=
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                2.9,
+                3.7,
+                .16
+            ),
+            material(0x222529,.55)
+        );
+
+    door.position.set(
+        1.45,
+        0,
+        0
+    );
+
+    door.castShadow=true;
+
+    pivot.add(door);
+
+    door.userData.type="door";
+
+
+    /* INNER PANEL */
+
+    const inner=
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                2.45,
+                3.2,
+                .04
+            ),
+            material(0x181b1e,.65)
+        );
+
+    inner.position.z=.11;
+
+    door.add(inner);
+
+
+    /* HANDLE */
+
+    const handle=
+        new THREE.Mesh(
+            new THREE.CylinderGeometry(
+                .06,
+                .06,
+                .65,
+                20
+            ),
+            material(0xd7d7d7,.25)
+        );
+
+    handle.rotation.z=Math.PI/2;
+
+    handle.position.set(
+        .95,
+        0,
+        .13
+    );
+
+    door.add(handle);
+
+
+}
+
+
+/* =========================
+   CODE PANEL
+========================= */
+
+function createLock(){
+
+    const body=
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                .7,
+                1.0,
+                .18
+            ),
+            material(0x15181b,.35)
+        );
+
+    body.position.set(
+        -2.2,
+        1.7,
+        -1.35
+    );
+
+    body.castShadow=true;
+
+    body.userData.type="lock";
+
+    scene.add(body);
+
+
+    const screen=
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                .52,
+                .3,
+                .025
+            ),
+            new THREE.MeshStandardMaterial({
+                color:0x00130a,
+                emissive:0x00ff77,
+                emissiveIntensity:.5
+            })
+        );
+
+    screen.position.set(
+        -2.2,
+        1.85,
+        -1.45
+    );
+
+    screen.userData.type="lock";
+
+    scene.add(screen);
+
+
+    /* LEDs */
+
+    const colors=[
+        0xff2222,
+        0xffc928,
+        0x29e878
+    ];
+
+    colors.forEach((c,i)=>{
+
+        const led=
+            new THREE.Mesh(
+                new THREE.SphereGeometry(
+                    .07,16,16
+                ),
+                new THREE.MeshStandardMaterial({
+                    color:c,
+                    emissive:c,
+                    emissiveIntensity:2
+                })
+            );
+
+        led.position.set(
+            -2.42+i*.22,
+            1.48,
+            -1.47
+        );
+
+        led.userData.type="lock";
+
+        scene.add(led);
+
+    });
+
+}
+
+
+/* =========================
+   NOTE
+========================= */
+
+function createNote(){
+
+    const note=
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                1.05,
+                .75,
+                .025
+            ),
+            material(0xdcc88f,.9)
+        );
+
+    note.position.set(
+        2.1,
+        2.15,
+        -1.38
+    );
+
+    note.rotation.z=-.08;
+
+    note.rotation.y=.03;
+
+    note.userData.type="note";
+
+    scene.add(note);
+
+}
+
+
+/* =========================
+   FURNITURE
+========================= */
+
+function createFurniture(){
+
+    const table=
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                1.8,
+                .12,
+                .8
+            ),
+            material(0x30251d,.6)
+        );
+
+    table.position.set(
+        3.5,
+        1,
+        .5
+    );
+
+    table.castShadow=true;
+
+    scene.add(table);
+
+
+    for(let x of [3.0,4.0]){
+
+        const leg=
+            new THREE.Mesh(
+                new THREE.BoxGeometry(
+                    .1,1,.1
+                ),
+                material(0x161719)
+            );
+
+        leg.position.set(
+            x,
+            .5,
+            .5
+        );
+
+        leg.castShadow=true;
+
+        scene.add(leg);
+
+    }
+
+}
+
+
+/* =========================
+   TOUCH
+========================= */
+
+function onPointerDown(e){
+
+    touchStartX=e.clientX;
+    touchStartY=e.clientY;
+
+}
+
+
+function onPointerUp(e){
+
+    const dx=e.clientX-touchStartX;
+    const dy=e.clientY-touchStartY;
+
+    if(Math.abs(dx)>30){
+
+        rotationY-=dx*.004;
+
+    }
+
+    if(Math.abs(dy)>30){
+
+        rotationX-=dy*.002;
+
+        rotationX=
+            Math.max(
+                -.7,
+                Math.min(.7,rotationX)
+            );
+
+    }
+
+    if(Math.abs(dx)<15 && Math.abs(dy)<15){
+
+        interact(e.clientX,e.clientY);
+
+    }
+
+}
+
+
+/* =========================
+   INTERACTION
+========================= */
+
+function interact(x,y){
+
+    mouse.x=
+        (x/innerWidth)*2-1;
+
+    mouse.y=
+        -(y/innerHeight)*2+1;
+
+    raycaster.setFromCamera(
+        mouse,
+        camera
+    );
+
+    const hits=
+        raycaster.intersectObjects(
+            scene.children,
+            true
+        );
+
+    if(!hits.length)return;
+
+    let obj=hits[0].object;
+
+    while(obj && !obj.userData.type){
+
+        obj=obj.parent;
+
+    }
+
+    if(!obj)return;
+
+    if(obj.userData.type==="lock"){
+
+        codePanel();
+
+    }
+
+    if(obj.userData.type==="note"){
+
+        note();
+
+    }
+
+    if(obj.userData.type==="door"){
+
+        if(unlocked){
+
+            openDoor();
+
+        }else{
+
+            codePanel();
+
+        }
+
+    }
+
+}
+
+
+/* =========================
+   CODE
+========================= */
+
+function codePanel(){
+
+    document.getElementById("popupContent")
+        .innerHTML=`
+        <h2>🔐 КОДОВАЯ ПАНЕЛЬ</h2>
+        <p>Найди четыре цифры и открой дверь.</p>
+        `;
+
+    document.getElementById("codeInput")
+        .style.display="block";
+
+    document.getElementById("submitCode")
+        .style.display="block";
+
+    document.getElementById("popup")
+        .style.display="flex";
+
     setTimeout(()=>{
-      inp.focus();
-    },200);
-  }
+        document.getElementById("codeInput").focus();
+    },150);
+
 }
 
-function closePopup(){
-  document.getElementById("popup").style.display = "none";
-}
 
-function openCode(){
-
-  if(unlocked){
-    popup(`
-      <div class="success">🔓</div>
-      <h2>ДВЕРЬ ОТКРЫТА</h2>
-      <p>Ты уже прошёл этот уровень.</p>
-    `);
-    return;
-  }
-
-  popup(`
-    <h2>🔐 КОДОВАЯ ПАНЕЛЬ</h2>
-    <p>Введи четырёхзначный код.</p>
-  `,true);
-}
-
-function openNote(){
-
-  popup(`
-    <h2>📝 ЗАПИСКА</h2>
-    <p>
-      <b>Красный = 7</b><br>
-      <b>Жёлтый = 2</b><br>
-      <b>Зелёный = 9</b>
-      <br><br>
-      Последняя цифра спрятана на двери.
-    </p>
-  `);
-}
-
-function hint(){
-
-  popup(`
-    <h2>💡 ПОДСКАЗКА</h2>
-    <p>
-      Цвета на панели дают первые три цифры.
-      <br><br>
-      Последняя цифра — <b>4</b>.
-    </p>
-  `);
-}
-
-function inventory(){
-
-  popup(`
-    <h2>🎒 ИНВЕНТАРЬ</h2>
-    <p>
-      ${unlocked ? "🔑 Ключ от двери" : "Инвентарь пока пуст."}
-    </p>
-  `);
-}
+/* =========================
+   CHECK CODE
+========================= */
 
 function checkCode(){
 
-  const input = document.getElementById("codeInput");
-  const display = document.getElementById("display");
+    const value=
+        document.getElementById("codeInput").value;
 
-  if(input.value === "7294"){
+    if(value==="7294"){
 
-    unlocked = true;
+        unlocked=true;
 
-    display.innerHTML = "OPEN";
+        openDoor();
 
-    document.getElementById("door").classList.add("open");
+        document.getElementById("popupContent")
+            .innerHTML=`
+            <div style="font-size:48px">🎉</div>
+            <h2>УРОВЕНЬ ПРОЙДЕН!</h2>
+            <p>
+            Код <b>7294</b> принят.
+            <br><br>
+            ⭐⭐⭐
+            </p>
+            `;
 
-    popup(`
-      <div class="success">🎉</div>
-      <h2>УРОВЕНЬ ПРОЙДЕН!</h2>
-      <p>
-        Код <b>7294</b> принят.
-        <br><br>
-        🔑 Дверь открыта.
-        <br><br>
-        ⭐⭐⭐
-      </p>
-      <button onclick="nextLevel()">
-        ➡️ СЛЕДУЮЩИЙ УРОВЕНЬ
-      </button>
-    `);
+        document.getElementById("codeInput")
+            .style.display="none";
 
-  }else{
+        document.getElementById("submitCode")
+            .style.display="none";
 
-    display.innerHTML = "ERR";
+    }else{
 
-    popup(`
-      <h2>❌ НЕВЕРНЫЙ КОД</h2>
-      <p>
-        Код не подходит.
-        <br><br>
-        Изучи комнату внимательнее.
-      </p>
-    `,true);
+        document.getElementById("popupContent")
+            .innerHTML=`
+            <h2>❌ НЕВЕРНЫЙ КОД</h2>
+            <p>Попробуй ещё раз.</p>
+            `;
 
-  }
+    }
+
 }
 
-function nextLevel(){
 
-  popup(`
-    <div class="success">🚧</div>
-    <h2>УРОВЕНЬ 2</h2>
-    <p>
-      Следующая комната уже готовится.
-      <br><br>
-      Здесь будет новая загадка.
-    </p>
-  `);
+/* =========================
+   DOOR OPEN
+========================= */
+
+function openDoor(){
+
+    if(doorOpen)return;
+
+    doorOpen=true;
+
+    let start=null;
+
+    function animateDoor(time){
+
+        if(!start)start=time;
+
+        let p=
+            Math.min(
+                (time-start)/1200,
+                1
+            );
+
+        door.parent.rotation.y=
+            -p*1.35;
+
+        if(p<1){
+
+            requestAnimationFrame(
+                animateDoor
+            );
+
+        }
+
+    }
+
+    requestAnimationFrame(
+        animateDoor
+    );
+
+}
+
+
+/* =========================
+   NOTE
+========================= */
+
+function note(){
+
+    document.getElementById("popupContent")
+        .innerHTML=`
+        <h2>📝 ЗАПИСКА</h2>
+        <p>
+        Цвета знают путь.
+        <br><br>
+        🔴 Красный = 7
+        <br>
+        🟡 Жёлтый = 2
+        <br>
+        🟢 Зелёный = 9
+        <br><br>
+        Последняя цифра спрятана на двери.
+        </p>
+        `;
+
+    document.getElementById("codeInput")
+        .style.display="none";
+
+    document.getElementById("submitCode")
+        .style.display="none";
+
+    document.getElementById("popup")
+        .style.display="flex";
+
+}
+
+
+/* =========================
+   HINT
+========================= */
+
+function hint(){
+
+    document.getElementById("popupContent")
+        .innerHTML=`
+        <h2>💡 ПОДСКАЗКА</h2>
+        <p>
+        Посмотри на цвета панели.
+        <br><br>
+        Последняя цифра — <b>4</b>.
+        <br><br>
+        Полный код: <b>7294</b>
+        </p>
+        `;
+
+    document.getElementById("codeInput")
+        .style.display="none";
+
+    document.getElementById("submitCode")
+        .style.display="none";
+
+    document.getElementById("popup")
+        .style.display="flex";
+
+}
+
+
+/* =========================
+   INVENTORY
+========================= */
+
+function inventory(){
+
+    document.getElementById("popupContent")
+        .innerHTML=`
+        <h2>🎒 ИНВЕНТАРЬ</h2>
+        <p>
+        ${unlocked
+        ?"🔑 Дверь открыта"
+        :"Инвентарь пока пуст."}
+        </p>
+        `;
+
+    document.getElementById("codeInput")
+        .style.display="none";
+
+    document.getElementById("submitCode")
+        .style.display="none";
+
+    document.getElementById("popup")
+        .style.display="flex";
+
+}
+
+
+/* =========================
+   CLOSE
+========================= */
+
+function closePopup(){
+
+    document.getElementById("popup")
+        .style.display="none";
+
+}
+
+
+/* =========================
+   RESIZE
+========================= */
+
+function resize(){
+
+    camera.aspect=
+        innerWidth/innerHeight;
+
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(
+        innerWidth,
+        innerHeight
+    );
+
+}
+
+
+/* =========================
+   LOOP
+========================= */
+
+function animate(){
+
+    requestAnimationFrame(animate);
+
+
+    /* CAMERA */
+
+    camera.rotation.order="YXZ";
+
+    camera.rotation.y=rotationY;
+
+    camera.rotation.x=rotationX;
+
+
+    renderer.render(
+        scene,
+        camera
+    );
 
 }
 
